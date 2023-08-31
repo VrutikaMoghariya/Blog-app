@@ -1,0 +1,41 @@
+:root{
+   --theme-color :  #FB2576 ;
+}
+.menu{
+    letter-spacing: 0.08em;
+    padding: 15px 20px;
+    color: black !important;
+    position: relative;
+  }
+.menu:after {    
+    bottom: 0;
+    content: "";
+    display: block;
+    height: 2px;
+    left: 50%;
+    position: absolute;
+    background: var(--theme-color);
+    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    width: 0;
+  }
+  .menu:hover:after { 
+    width: 100%; 
+    left: 0; 
+  }
+
+
+  .signin{
+    background: var(--theme-color) !important;
+    border:var(--theme-color) !important;
+    transition: all ease-in-out 0.5s !important;
+  }
+  .signin:hover{
+    background: white !important;
+    color: var(--theme-color) !important;
+    outline:var(--theme-color) thin solid;
+  }
+
+
+  .nav-icon:hover{
+    color: var(--theme-color) !important;
+  }
