@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const auth = require('../middleware/auth');
+const upload = require('../middleware/multer');
 
 
 
@@ -10,14 +11,6 @@ const categoryController = require('../controller/category');
 const blogController = require('../controller/blog');
 const userController = require('../controller/users');
 const adminController = require('../controller/admin');
-
-
-
-/*_______________________________  Get HOME Page _______________________________________ */
-
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' });
-});
 
 
 
@@ -98,7 +91,7 @@ router.delete('/delete-category', categoryController.deleteCategory);
 
 /******  Create ******/
 
-router.post('/create-blog', blogController.createBlog);
+router.post('/create-blog', upload.single('img') , blogController.createBlog);
 
 
 /******  get ******/

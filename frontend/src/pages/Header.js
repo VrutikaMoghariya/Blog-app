@@ -14,24 +14,20 @@ function Header() {
     const [storageToken, setStoragetoken] = useState("");
 
     useEffect(() => {
-        const getToken = localStorage.getItem("User-token");
-        setStoragetoken(getToken);
-      }, []);
+        const userToken = localStorage.getItem("User-token");
+        setStoragetoken(userToken);
+
+    }, []);
 
     const clickonLogout = async () => {
         await localStorage.clear("User-token");
         setStoragetoken("");
+    }
 
-     }
-   
 
-    
-
-   
 
     return (
         <>
-
             <Container fluid className='py-5 '  >
                 <Row className='mx-md-4 mx-sm-3 mx-1 '>
                     <Navbar expand="lg" className=" bg-white rounded px-md-5 px-sm-2 px-1  py-3 mx-auto  d-flex d-flex-row shadow  bg-body rounded-3 " style={{ maxWidth: '1320px' }}>
@@ -44,18 +40,14 @@ function Header() {
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="ms-auto text-dark ">
                                 <Nav.Link href="/" className='menu mx-2'>Home</Nav.Link>
-                                <Nav.Link href="/blogs" className='menu mx-2'>Blogs</Nav.Link>
-                                <Nav.Link href="#link" className='menu mx-2'>Tags</Nav.Link>
-                                <Nav.Link href="#link" className='menu mx-2'>Authors</Nav.Link>
-                                <Nav.Link href="#link" className='menu mx-2'>Contact</Nav.Link>
+                                <Nav.Link href={storageToken ? "/blogs" : "/login"} className='menu mx-2'>Blogs</Nav.Link>
+                                <Nav.Link href="/contact" className='menu mx-2'>Contact</Nav.Link>
                             </Nav>
                             <Button className='btn nav-icon text-dark border-0 bg-white mx-1 fs-5' onClick={handleShow}><FiSearch /></Button>
                             <Button className='btn nav-icon text-dark border-0 bg-white mx-1 fs-5'><FiMoon /></Button>
-                            { storageToken ? <Link to='/login'><Button onClick={clickonLogout} className='signin btn  px-4 mx-3 rounded-pill'>Logout</Button></Link> : 
-                                     <a href='/login'><Button className='signin btn  px-4 mx-3 rounded-pill'>Login</Button></a>}
-                      
+                            {storageToken ? <Link to='/login'><Button onClick={clickonLogout} className='signin btn  px-4 mx-3 rounded-pill'>Logout</Button></Link> :
+                                <Link to='/login'><Button className='signin btn  px-4 mx-3 rounded-pill'>Login</Button></Link>}
                         </Navbar.Collapse>
-
                         <Modal show={show} onHide={handleClose} className='p-0 mt-5 '>
                             <Modal.Body>
                                 <Form >

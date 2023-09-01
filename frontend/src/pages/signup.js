@@ -5,6 +5,7 @@ import { useState } from 'react';
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import Login from './Login';
+import Header from './Header';
 
 
 function Signup() {
@@ -19,18 +20,17 @@ function Signup() {
     const handleSubmit = async (e) => {
 
         e.preventDefault();
-
         const post = {
             username: username,
             email: email,
             password: password
         }
         try {
-            const res = await axios.post('http://localhost:3001/register', post);
-            console.log(res);
-            setMsg(res.data.msg);
-            localStorage.setItem('User-token', res.data.token);
-            setUsertoken(res.data.token);
+            const response = await axios.post('http://localhost:3001/register', post);
+            console.log(response);
+            setMsg(response.data.msg);
+            localStorage.setItem('User-token', response.data.token);
+            setUsertoken(response.data.token);
         } catch (e) {
             setMsg(e.response.data.msg);
         }
@@ -47,6 +47,7 @@ function Signup() {
     } else {
         return (
             <>
+                <Header />
                 <Container fluid>
                     <Row>
                         <Col></Col>

@@ -3,9 +3,9 @@ import axios from "axios";
 import Carousel from 'react-bootstrap/Carousel';
 import { Container, Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { SlCalender } from "react-icons/sl";
-import { BiLogoTwitter , BiLogoFacebook , BiLogoLinkedin , BiLogoInstagram , BiLogoGithub} from "react-icons/bi";
+import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub } from "react-icons/bi";
 import Footer from './footer';
-
+import Header from './Header';
 
 
 
@@ -13,7 +13,6 @@ function Home() {
 
   const [blogData, setBlogdata] = useState([]);
   const [category, setCategory] = useState([]);
-
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
@@ -22,12 +21,11 @@ function Home() {
       event.preventDefault();
       event.stopPropagation();
     }
-
     setValidated(true);
   };
 
 
-  // get Blog-data from API
+  //_________________ getdata from API
 
   useEffect(() => {
 
@@ -47,8 +45,9 @@ function Home() {
 
   return (
     <>
+      <Header />
 
-      {/* slider of blog */}
+      {/********************* slider of blog ********************* */ }
 
       <Container className='bg-info' style={{ height: '500px' }}>
         <Row xs={1} md={2} >
@@ -78,15 +77,13 @@ function Home() {
         </Row>
       </Container>
 
-
-      {/* display all Blogs */}
+      {/********************* display all Blogs ********************* */ }
 
       <Container className='d-flex'>
         <Row>
           <Col sm={12} lg={8}>
             {
               blogData.map((item) => {
-                
                 return (
                   <>
                     <Col >
@@ -97,7 +94,7 @@ function Home() {
                               <Card.Img variant="top" src={item.img} className='blog-img  w-100 h-100   ' />
                             </div>
                           </Col>
-                          <Col lg={8}  md={11}>
+                          <Col lg={8} md={11}>
                             <Card.Body className='ps-3'>
                               <Button style={{ backgroundColor: ' #EFF1F4' }} className='rounded-pill fs-6 category-btn text-capitalize border-0 text-dark px-3 py-1 mb-3'>
                                 <svg height="20" width="20">
@@ -125,8 +122,8 @@ function Home() {
 
           <Col sm={12} lg={4}>
             <div className='p-4 ms-4 my-5 border-0 rounded-4 shadow-sm bg-body'>
-                {/********************* Featured post *******************/}
-              <div className='p-2'>
+             
+              <div className='p-2'>       {/***************** Featured post  ****************/}
                 <h4 className='mb-4 fw-bold'>Featured posts</h4>
                 {
                   blogData.map((item, i) => {
@@ -156,7 +153,7 @@ function Home() {
                 }
               </div>
 
-              <div className='p-2 my-3'>
+              <div className='p-2 my-3'>       {/***************** Tags ****************/}
                 <h4 className='mb-4 fw-bold'>Tags</h4>
                 {
                   category.map((item) => {
@@ -174,8 +171,8 @@ function Home() {
                 }
               </div>
 
-              <div className='my-4 p-2 '>
-                <h4 className='mb-4 fw-bold'>Latest posts</h4>
+              <div className='my-4 p-2 '>        {/**************** Latest posts ***************/}
+                <h4 className='mb-4 fw-bold'>Latest posts</h4>     
                 {
                   blogData.map((item, i) => {
                     if (i < 3) {
@@ -204,7 +201,7 @@ function Home() {
                 }
               </div>
 
-              <div className='p-4 m-2 theme-bg-pink text-white text-center  rounded-4'>
+              <div className='p-4 m-2 theme-bg-pink text-white text-center  rounded-4'>  {/***************** Newsletter ****************/}
                 <h2 className='mt-1 fw-bold'>Newsletter</h2>
                 <h5 className=' mx-3 lh-base'>Get the latest posts delivered straight to your inbox.</h5>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -243,21 +240,21 @@ function Home() {
                   <Button type="submit" className='bg-white text-dark fs-5 fw-bold rounded-pill w-100 p-3 m-1 py-2 border-0 mb-3' >Subscribe</Button>
                 </Form>
               </div>
-
-              <div className='p-2'>
+ 
+              <div className='p-2'>       {/***************** Follow Link ****************/}
                 <h4 className='my-4 fw-bold'>Follow US</h4>
-                <a href='#' style={{background:'#f0f2f5'}} className=' text-center p-2 fs-4 shadow-sm me-2 text-info  rounded-circle lh-base'><BiLogoTwitter className='mx-1 mb-1'  /></a>
-                <a href='#' style={{background:'#f0f2f5'}} className=' text-center p-2 fs-4 shadow-sm me-2  rounded-circle lh-base'><BiLogoFacebook className='mx-1 mb-1'  /></a>
-                <a href='#' style={{background:'#f0f2f5'}} className=' text-center p-2 fs-4 shadow-sm me-2  rounded-circle lh-base'><BiLogoLinkedin className='mx-1 mb-1'  /></a>
-                <a href='#' style={{background:'#f0f2f5'}} className=' text-center p-2 fs-4 shadow-sm me-2 text-danger rounded-circle lh-base'><BiLogoInstagram className='mx-1 mb-1'  /></a>
-                <a href='#' style={{background:'#f0f2f5'}} className=' text-center p-2 fs-4 shadow-sm me-2 text-dark rounded-circle lh-base'><BiLogoGithub className='mx-1 mb-1'  /></a>
+                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2 text-info  rounded-circle lh-base'><BiLogoTwitter className='mx-1 mb-1' /></a>
+                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2  rounded-circle lh-base'><BiLogoFacebook className='mx-1 mb-1' /></a>
+                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2  rounded-circle lh-base'><BiLogoLinkedin className='mx-1 mb-1' /></a>
+                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2 text-danger rounded-circle lh-base'><BiLogoInstagram className='mx-1 mb-1' /></a>
+                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2 text-dark rounded-circle lh-base'><BiLogoGithub className='mx-1 mb-1' /></a>
               </div>
             </div>
           </Col>
         </Row>
       </Container>
 
-      <Footer/>
+      <Footer />
     </>
   )
 }

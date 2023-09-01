@@ -5,7 +5,7 @@ const BLOG = require('../model/blog');
 exports.createBlog = async function (req, res, next) {
 
     try {
-
+        console.log(req.body);
         const createBlog = await BLOG.create(req.body);
 
         res.status(201).json({
@@ -58,7 +58,7 @@ exports.getBlog = async function (req, res, next) {
 
 exports.updateBlog = async function (req, res, next) {
     try {
-        await BLOG.findByIdAndUpdate(req.query.id, req.body);
+        await BLOG.findByIdAndUpdate(req.query._id, req.body);
 
         res.status(200).json({
             status: "success",
@@ -79,7 +79,7 @@ exports.updateBlog = async function (req, res, next) {
 exports.deleteBlog = async function (req, res, next) {
     try {
 
-        await BLOG.findByIdAndDelete(req.query.id);
+        await BLOG.findByIdAndDelete(req.query._id);
 
         res.status(200).json({
             status: "success",

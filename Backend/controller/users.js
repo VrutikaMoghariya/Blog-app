@@ -16,16 +16,16 @@ exports.createUser = async function (req, res, next) {
 
         // return success if the new user is added to the database successfully
         res.status(201).json({
-            status: "success",
-            msg: "user Creation Successfully",
+            status: "Success",
+            msg: "User Creation Successfully",
             data: createUser,
-            token : token
+            token: token
         })
 
     } catch (error) {
         res.status(500).json({
-            status: "Creation Fail",
-            msg: "user Creation not Success",
+            status: "Fail",
+            msg: "User Creation not Successfully",
             data: error
         })
     }
@@ -46,22 +46,25 @@ exports.loginUser = async function (req, res, next) {
             const token = jwt.sign({ userId: user._id, userEmail: user.email }, "RANDOM-TOKEN");
 
             //   return success response
-            res.status(200).send({
-                message: "Login Successful",
+            res.status(200).json({
+                status:"Success",
+                msg: "Login Successfully",
                 email: user.email,
-                token,
+                token: token
             });
 
         } else {
-            res.status(400).send({
-                message: "Passwords does not match"
+            res.status(400).json({
+                msg: "Passwords does not Match"
             });
         }
 
     } catch (error) {
-        res.status(404).send({
-            message: "User not found"
-        });
+        res.status(404).json({
+            status: "Fail",
+            msg: "User get not Success",
+            data: error
+        })
     }
 }
 
@@ -76,16 +79,16 @@ exports.loginUser = async function (req, res, next) {
 //         const getUser = await USER.find();
 
 //         res.status(200).json({
-//             status: "success",
-//             msg: "USER get Successfully",
+//             status: "Success",
+//             msg: "User get Successfully",
 //             data: getUser
 //         })
 
 //     } catch (error) {
 
 //         res.status(400).json({
-//             status: "reading Fail",
-//             msg: "USER get not Success",
+//             status: "Fail",
+//             msg: "User get not Successfully",
 //             data: error
 //         })
 
@@ -101,14 +104,15 @@ exports.loginUser = async function (req, res, next) {
 //         await USER.findByIdAndUpdate(req.query.id, req.body);
 
 //         res.status(200).json({
-//             status: "success",
-//             message: "USER Update successful",
+//             status: "Success",
+//             message: "User Update not Successfully",
 //         })
 
 //     } catch (error) {
 //         res.status(400).json({
-//             status: "fail",
+//             status: "Fail",
 //             message: error.message,
+//             data :  error.message
 //         })
 //     }
 // }
@@ -120,15 +124,14 @@ exports.loginUser = async function (req, res, next) {
 //     try {
 
 //         await USER.findByIdAndDelete(req.query.id);
-
 //         res.status(200).json({
-//             status: "success",
-//             message: "USER DELETE successful",
+//             status: "Success",
+//             message: "User Delete Successfully",
 //         })
 
 //     } catch (error) {
 //         res.status(404).json({
-//             status: "fail",
+//             status: "Fail",
 //             message: error.message,
 //         })
 //     }

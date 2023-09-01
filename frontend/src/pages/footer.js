@@ -1,28 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Row, Button, Form, InputGroup } from 'react-bootstrap';
-import axios from "axios";
 import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub } from "react-icons/bi";
 
 function Footer() {
-
-    const [blogData, setBlogdata] = useState([]);
-    const [category, setCategory] = useState([]);
-    useEffect(() => {
-        // get Blog-data from API
-        axios
-            .get("http://localhost:3001/get-blog")
-            .then(data => setBlogdata(data.data.data))
-            .catch(error => console.log(error));
-
-        // get category from API
-        axios
-            .get("http://localhost:3001/get-category")
-            .then(data => setCategory(data.data.data))
-            .catch(error => console.log(error));
-
-    }, [])
-
 
 
 
@@ -68,11 +49,11 @@ function Footer() {
 
                             <div className='p-2'>
                                 <h4 className='my-4 fw-bold'>Follow US</h4>
-                                <a href='#' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2 text-info  rounded-circle lh-base'><BiLogoTwitter className='mx-1 mb-1' /></a>
-                                <a href='#' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2  rounded-circle lh-base'><BiLogoFacebook className='mx-1 mb-1' /></a>
-                                <a href='#' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2  rounded-circle lh-base'><BiLogoLinkedin className='mx-1 mb-1' /></a>
-                                <a href='#' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2 text-danger rounded-circle lh-base'><BiLogoInstagram className='mx-1 mb-1' /></a>
-                                <a href='#' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2 text-dark rounded-circle lh-base'><BiLogoGithub className='mx-1 mb-1' /></a>
+                                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2 text-info  rounded-circle lh-base'><BiLogoTwitter className='mx-1 mb-1' /></a>
+                                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2  rounded-circle lh-base'><BiLogoFacebook className='mx-1 mb-1' /></a>
+                                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2  rounded-circle lh-base'><BiLogoLinkedin className='mx-1 mb-1' /></a>
+                                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2 text-danger rounded-circle lh-base'><BiLogoInstagram className='mx-1 mb-1' /></a>
+                                <a href='/' style={{ background: '#f0f2f5' }} className=' text-center p-2 fs-4 shadow-sm me-2 text-dark rounded-circle lh-base'><BiLogoGithub className='mx-1 mb-1' /></a>
                             </div>
 
 
