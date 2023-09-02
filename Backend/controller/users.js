@@ -17,7 +17,7 @@ exports.createUser = async function (req, res, next) {
         // return success if the new user is added to the database successfully
         res.status(201).json({
             status: "Success",
-            msg: "User Creation Successfully",
+            msg: "User Create Successfully",
             data: createUser,
             token: token
         })
@@ -25,12 +25,13 @@ exports.createUser = async function (req, res, next) {
     } catch (error) {
         res.status(500).json({
             status: "Fail",
-            msg: "User Creation not Successfully",
+            msg: "User's Creation not Successfully",
             data: error
         })
     }
 }
 
+// Login -user
 
 exports.loginUser = async function (req, res, next) {
 
@@ -69,70 +70,69 @@ exports.loginUser = async function (req, res, next) {
 }
 
 
+// get -user
 
-// read
+exports.getUser = async function (req, res, next) {
 
-// exports.getUser = async function (req, res, next) {
+    try {
 
-//     try {
+        const getUser = await USER.find();
 
-//         const getUser = await USER.find();
+        res.status(200).json({
+            status: "Success",
+            msg: "User get Successfully",
+            data: getUser
+        })
 
-//         res.status(200).json({
-//             status: "Success",
-//             msg: "User get Successfully",
-//             data: getUser
-//         })
+    } catch (error) {
 
-//     } catch (error) {
+        res.status(400).json({
+            status: "Fail",
+            msg: "User get not Successfully",
+            data: error
+        })
 
-//         res.status(400).json({
-//             status: "Fail",
-//             msg: "User get not Successfully",
-//             data: error
-//         })
+    }
 
-//     }
-
-// }
-
-
-// update
-
-// exports.updateUser = async function (req, res, next) {
-//     try {
-//         await USER.findByIdAndUpdate(req.query.id, req.body);
-
-//         res.status(200).json({
-//             status: "Success",
-//             message: "User Update not Successfully",
-//         })
-
-//     } catch (error) {
-//         res.status(400).json({
-//             status: "Fail",
-//             message: error.message,
-//             data :  error.message
-//         })
-//     }
-// }
+}
 
 
-// delete
+// update - user
 
-// exports.deleteUser = async function (req, res, next) {
-//     try {
+exports.updateUser = async function (req, res, next) {
+    try {
+        await USER.findByIdAndUpdate(req.query.id, req.body);
 
-//         await USER.findByIdAndDelete(req.query.id);
-//         res.status(200).json({
-//             status: "Success",
-//             message: "User Delete Successfully",
-//         })
+        res.status(200).json({
+            status: "Success",
+            msg: "User Update Successfully",
+        })
 
-//     } catch (error) {
-//         res.status(404).json({
-//             status: "Fail",
-//             message: error.message,
-//         })
-//     }
-// }
+    } catch (error) {
+        res.status(400).json({
+            status: "Fail",
+            msg: "User not Update Successfully",
+            data :  error.message
+        })
+    }
+}
+
+
+// delete - user
+
+exports.deleteUser = async function (req, res, next) {
+    try {
+
+        await USER.findByIdAndDelete(req.query.id);
+        res.status(200).json({
+            status: "Success",
+            msg: "User Delete Successfully"
+        })
+
+    } catch (error) {
+        res.status(404).json({
+            status: "Fail",
+            msg: "User not Delete Successfully"
+        })
+    }
+}

@@ -9,16 +9,16 @@ exports.createBlog = async function (req, res, next) {
         const createBlog = await BLOG.create(req.body);
 
         res.status(201).json({
-            status: "success",
-            msg: "Blog Creation Successfully",
+            status: "Success",
+            msg: "Blog Create Successfully",
             data: createBlog
         })
 
     } catch (error) {
 
         res.status(400).json({
-            status: "Creation Fail",
-            msg: "Blog Creation not Success",
+            status: "Fail",
+            msg: "Blog Creation not Successfully",
             data: error
         })
 
@@ -36,7 +36,7 @@ exports.getBlog = async function (req, res, next) {
         const getBlog = await BLOG.find().populate('category');
 
         res.status(200).json({
-            status: "success",
+            status: "Success",
             msg: "Blog get Successfully",
             data: getBlog
         })
@@ -44,8 +44,8 @@ exports.getBlog = async function (req, res, next) {
     } catch (error) {
 
         res.status(400).json({
-            status: "reading Fail",
-            msg: "Blog get not Success",
+            status: " Fail",
+            msg: "Blog get not Successfully",
             data: error
         })
 
@@ -61,14 +61,14 @@ exports.updateBlog = async function (req, res, next) {
         await BLOG.findByIdAndUpdate(req.query._id, req.body);
 
         res.status(200).json({
-            status: "success",
-            message: "Blog Update successful",
+            status: "Success",
+            msg: "Blog Update Successfully",
         })
 
     } catch (error) {
         res.status(400).json({
-            status: "fail",
-            message: error.message,
+            status: "Fail",
+            msg: error,
         })
     }
 }
@@ -80,16 +80,15 @@ exports.deleteBlog = async function (req, res, next) {
     try {
 
         await BLOG.findByIdAndDelete(req.query._id);
-
         res.status(200).json({
-            status: "success",
-            message: "Blog DELETE successful",
+            status: "Success",
+            msg: "Blog DELETE Successfully",
         })
 
     } catch (error) {
         res.status(404).json({
-            status: "fail",
-            message: error.message,
+            status: "Fail",
+            msg: error,
         })
     }
 }
