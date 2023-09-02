@@ -2,65 +2,62 @@ const ADMIN = require('../model/admin');
 const bcrypt = require("bcrypt");
 var jwt = require('jsonwebtoken');
 
-
-// Register- Admin
+// Create - Admin
 
 exports.createAdmin = async function (req, res, next) {
 
     try {
-
-        // hash the password
-        req.body.password = await bcrypt.hash(req.body.password, 10);
+        req.body.password = await bcrypt.hash(req.body.password, 10);  // hash the password
 
         const createAdmin = await ADMIN.create(req.body);
-        const token = jwt.sign({ adminId: createAdmin._id, adminEmail: createAdmin.email }, "RANDOM-TOKEN");
+        const token = jwt.sign({adminId: createAdmin._id}, "RANDOM-TOKEN");
 
-        // return success if the new ADMIN is added to the database successfully
+        // return success if the new Admin is added to the database successfully
         res.status(201).json({
-            status: "success",
-            msg: "ADMIN Creation Successfully",
+            status: "Success",
+            msg: "Admin Create Successfully",
             data: createAdmin,
             token: token
         })
     } catch (error) {
-        res.status(500).json({
-            status: "Creation Fail",
-            msg: "ADMIN Creation not Success",
+        res.status(400).json({
+            status: "Fail",
+            msg: "Admin not Create Successfully",
             data: error
         })
     }
 }
 
 
+// Login - Admin
+
 exports.loginAdmin = async function (req, res, next) {
 
     try {
-        const admin = await ADMIN.findOne({ email: req.body.email });
+        const admin = await ADMIN.findOne({email: req.body.email });
 
         // compare the password entered and the hashed password found
         const isMatch = await bcrypt.compare(req.body.password, admin.password);
 
         if (isMatch) {
-
-            //   create JWT token
-            const token = jwt.sign({ adminId: admin._id, adminEmail: admin.email }, "RANDOM-TOKEN");
-
-            //   return success response
-            res.status(200).send({
-                message: "Login Successful",
+            const token = jwt.sign({adminId: admin._id}, "RANDOM-TOKEN");     //   create JWT token
+            res.status(200).json({                                             //   return success response
+                status : "Success",
+                msg: "Admin Login Successfully",
                 email: admin.email,
-                token,
+                token : token,
             });
-
         } else {
-            res.status(400).send({
-                message: "Passwords does not match"
+            res.status(400).json({
+                msg: "Password does not Match"
             });
         }
-
+        
     } catch (error) {
-        res.status(404).send({
-            message: "ADMIN not found"
+        res.status(400).json({
+            status: "Fail",
+            msg: "Admin not Found",
+            data: error
         });
     }
 }

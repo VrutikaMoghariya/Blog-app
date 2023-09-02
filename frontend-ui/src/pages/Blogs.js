@@ -1,26 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import { SlCalender } from "react-icons/sl";
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import Header from './Header';
-import { Form, Modal } from 'react-bootstrap';
+import Footer from './Footer';
+import { useNavigate } from 'react-router-dom';
+import { SlCalender } from "react-icons/sl";
+import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 
 function Blogs() {
 
+  const navigate = useNavigate();
   const [blogData, setBlogdata] = useState([]);
   const [categoryData, setCategorydata] = useState([]);
+  const [category, setCategory] = useState([]);
   const [description, setDescription] = useState("");
-  const [category, setcategory] = useState("");
   const [img, setImg] = useState("");
   const [editid, setEditid] = useState("");
   const [title, setTitle] = useState("");
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const userToken = localStorage.getItem("User-token");
+    if (userToken) {
+      navigate("/blogs");
+    }
+    else {
+      navigate("/login");
+    }
+  }, [navigate]);
 
 
   //________________ GET API Data
 
   useEffect(() => {
+    // get category 
+    axios
+      .get("http://localhost:3001/get-category")
+      .then(data => setCategorydata(data.data.data))
+      .catch(error => console.log(error));
     getAPIdata();
-  }, [])
+  }, []);
 
   const getAPIdata = () => {
 
@@ -29,90 +47,74 @@ function Blogs() {
       .get("http://localhost:3001/get-blog")
       .then(data => setBlogdata(data.data.data))
       .catch(error => console.log(error));
-
-    // get category 
-    axios
-      .get("http://localhost:3001/get-category")
-      .then(data => setCategorydata(data.data.data))
-      .catch(error => console.log(error));
-  }
+  };
 
 
   //_______________ Create Blog
 
-  const createBlog = async () => {
-    console.log("hello");
-    const response = await axios.post("http://localhost:3001/create-blog", {
-      title: title,
-      description: description,
-      category: category,
-      img: img
-    })
-    getAPIdata();
-
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const addBlog = async () => {
 
     const formData = new FormData();
-    formData.append("img", img);
+    formData.append("img", img[0]);
+    formData.append("title", title);
     formData.append("description", description);
-    formData.append("description", description);
-    
-    const result = await axios.post('/api/images', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
-    console.log(result.data)
+    formData.append("category", category);
+
+    console.log(editid);
+
+    if (editid) {
+       await axios.post(`http://localhost:3001/update-blog?_id=${editid}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+    } else {
+       await axios.post("http://localhost:3001/create-blog", formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+    }
+    await getAPIdata();
+    handleClose();
   }
+
 
   //_______________ Handle Model
 
-  const [show, setShow] = useState(false);
+
   const handleClose = () => {
-    if (editid) {
-      editBlog();
-    } else {
-      createBlog();
-    }
     setShow(false)
   };
-  const handleShow = () => setShow(true);
+  
+  const handleShow = () => {
+    setCategory("");
+    setDescription("");
+    setImg("");
+    setTitle("");
+    setEditid("");
+    setShow(true)
+  }
 
 
   //________________ edit Blog
 
   const setData = (data) => {
-    setcategory(data.category.name);
+    handleShow();
+    setCategory(data.category.name);
     setDescription(data.description);
     setImg(data.img);
     setTitle(data.title);
     setEditid(data._id);
-    handleShow();
   }
 
-  const editBlog = async () => {
-    const data = {
-      title: title,
-      description: description,
-      category: {
-        name: category,
-      },
-      img: img,
-    }
-    await axios.post(`http://localhost:3001/update-blog?_id=${editid}`, data);
-  }
+
 
   //________________ Delete Blog
 
   const deleteBlog = async (data) => {
-    console.log(data);
+    alert("Are You Sure");
     await axios.delete(`http://localhost:3001/delete-blog?_id=${data._id}`);
     getAPIdata();
-  }
+  };
 
 
   return (
     <>
       <Header />
+
       <Container>
         <Col>
           <Button className='d-flex fs-4 bg-light text-dark  mx-auto' onClick={handleShow}>Create Your Own Blog</Button>
@@ -122,7 +124,7 @@ function Blogs() {
           {/***************** model Form For Create and Update Blog **************/}
 
           <Modal show={show} onHide={handleClose} >
-            <Form className='p-3 bg-light' enctype="multipart/form-data" onSubmit={handleSubmit}>
+            <Form className='p-3 bg-light' encType="multipart/form-data" >
               <Form.Group className="mb-3" >
                 <Form.Label>Title</Form.Label>
                 <Form.Control type="text" placeholder="Enter Title" name='title' value={title} onChange={(e) => { setTitle(e.target.value) }} />
@@ -133,7 +135,7 @@ function Blogs() {
               </Form.Group>
               <Form.Group className="mb-3" >
                 <Form.Label>Category</Form.Label>
-                <Form.Select name='category' value={category} defaultValue={category} onChange={(e) => { setcategory(e.target.value) }}>
+                <Form.Select name='category' value={category} defaultValue={category} onChange={(e) => { setCategory(e.target.value) }}>
                   <option>Select category</option>
                   {
                     categoryData.map((item) => {
@@ -148,18 +150,16 @@ function Blogs() {
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Img</Form.Label>
-                <Form.Control type="filename" value={img} />
-                <Form.Control type="file" name='img' onChange={(e) => { setImg(e.target.value) }} />
+                <Form.Control type="file" name='img' onChange={(e) => { setImg(e.target.files) }} />
               </Form.Group>
             </Form>
             <Modal.Footer>
-              <Button variant="primary" onClick={handleClose}>
+              <Button variant="primary" onClick={addBlog}>
                 Submit
               </Button>
             </Modal.Footer>
           </Modal>
         </Col>
-
 
         {
           blogData.map((item) => {
@@ -170,7 +170,7 @@ function Blogs() {
                     <Row>
                       <Col lg={4} md={12}>
                         <div className='overflow-hidden rounded-4 shadow bg-body m-2' style={{ width: '250px', height: '250px' }}>
-                          <Card.Img variant="top" src={item.img} className='blog-img  w-100 h-100   ' />
+                          <Card.Img variant="top" src={"http://localhost:3001/images/" + item.img} className='blog-img  w-100 h-100   ' />
                         </div>
                       </Col>
                       <Col lg={6} md={12}>
@@ -200,10 +200,10 @@ function Blogs() {
           })
         }
       </Container>
+
+      <Footer />
     </>
   )
-
 }
 
-
-export default Blogs
+export default Blogs;

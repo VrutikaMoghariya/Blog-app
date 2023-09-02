@@ -1,95 +1,80 @@
 const CATEGORY = require('../model/category');
 
-// create
+// Create - Category
 
 exports.createCategory = async function (req, res, next) {
 
     try {
-
         const createCategory = await CATEGORY.create(req.body);
         res.status(201).json({
-            status: "success",
-            msg: "category Creation Successfully",
+            status: "Success",
+            msg: "Category Create Successfully",
             data: createCategory
         })
-
     } catch (error) {
-
-        res.status(404).json({
-            status: "Creation Fail",
-            msg: "category Creation not Success",
+        res.status(400).json({
+            status: "Fail",
+            msg: "Category not Create Successfully",
             data: error
         })
-
     }
-
 }
 
 
-// read
+// Get - Category
 
 exports.getCategory = async function (req, res, next) {
 
     try {
-
         const getCategory = await CATEGORY.find();
-
-        res.status(201).json({
-            status: "success",
-            msg: "category get Successfully",
+        res.status(200).json({
+            status: "Success",
+            msg: "Category get Successfully",
             data: getCategory
         })
-
     } catch (error) {
-
         res.status(400).json({
-            status: "reading Fail",
-            msg: "category get not Success",
+            status: "Fail",
+            msg: "Category not get Successfully",
             data: error
         })
-
     }
-
 }
 
 
-// update
-
+// Update - Category
 
 exports.updateCategory = async function (req, res, next) {
     try {
-        await CATEGORY.findByIdAndUpdate(req.query.id, req.body);
-
+        await CATEGORY.findByIdAndUpdate(req.query._id, req.body);
         res.status(200).json({
-            status: "success",
-            message: "category Update successful",
+            status: "Success",
+            msg: "Category Update Successfully",
         })
-
     } catch (error) {
         res.status(400).json({
-            status: "fail",
-            message: error.message,
+            status: "Fail",
+            msg: "Category not Update Successfully",
+            data: error,
         })
     }
 }
 
 
-// delete
+// Delete - Category
 
 exports.deleteCategory = async function (req, res, next) {
     try {
-
-        await CATEGORY.findByIdAndDelete(req.query.id);
-
+        await CATEGORY.findByIdAndDelete(req.query._id);
         res.status(200).json({
-            status: "success",
-            message: "category DELETE successful",
+            status: "Success",
+            msg: "Category Delete Successfully",
         })
-
     } catch (error) {
-        res.status(404).json({
-            status: "fail",
-            message: error.message,
+        res.status(400).json({
+            status: "Fail",
+            msg:"Category not Delete Successfully" ,
+            data : error
         })
     }
 }

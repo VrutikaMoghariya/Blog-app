@@ -1,94 +1,104 @@
 const BLOG = require('../model/blog');
 
-// create
+// Create-Blog
 
 exports.createBlog = async function (req, res, next) {
 
     try {
-        console.log(req.body);
+        req.body.user = req.userId;
+        req.body.img = req.file.filename;
         const createBlog = await BLOG.create(req.body);
-
         res.status(201).json({
             status: "Success",
             msg: "Blog Create Successfully",
             data: createBlog
         })
-
     } catch (error) {
-
         res.status(400).json({
             status: "Fail",
-            msg: "Blog Creation not Successfully",
+            msg: "Blog not Create Successfully",
             data: error
         })
-
     }
-
 }
 
 
-// read
+// Get-Blog
 
 exports.getBlog = async function (req, res, next) {
 
     try {
-
         const getBlog = await BLOG.find().populate('category');
-
         res.status(200).json({
             status: "Success",
             msg: "Blog get Successfully",
             data: getBlog
         })
-
     } catch (error) {
-
         res.status(400).json({
             status: " Fail",
-            msg: "Blog get not Successfully",
+            msg: "Blog not get Successfully",
             data: error
         })
-
     }
+}
 
+// Get-Blog by User
+
+exports.getuserBlog = async function (req, res, next) {
+
+    try {
+        const getBlog = await BLOG.findById(req.userId);
+        res.status(200).json({
+            status: "Success",
+            msg: "User-Blog get Successfully",
+            data: getBlog
+        })
+    } catch (error) {
+        res.status(400).json({
+            status: "Fail",
+            msg: "User-Blog not get Successfully",
+            data: error
+        })
+    }
 }
 
 
-// update
+// Update-Blog
 
 exports.updateBlog = async function (req, res, next) {
+
     try {
         await BLOG.findByIdAndUpdate(req.query._id, req.body);
-
         res.status(200).json({
             status: "Success",
             msg: "Blog Update Successfully",
         })
-
     } catch (error) {
         res.status(400).json({
             status: "Fail",
-            msg: error,
+            msg: "Blog not Update Successfully",
+            data: error,
         })
     }
 }
 
 
-// delete
+// Delete-Blog
 
 exports.deleteBlog = async function (req, res, next) {
+    
     try {
-
         await BLOG.findByIdAndDelete(req.query._id);
         res.status(200).json({
             status: "Success",
-            msg: "Blog DELETE Successfully",
+            msg: "Blog Delete Successfully",
         })
-
     } catch (error) {
-        res.status(404).json({
+        res.status(400).json({
             status: "Fail",
-            msg: error,
+            msg: "Blog not Delete Successfully",
+            data: error,
         })
     }
 }

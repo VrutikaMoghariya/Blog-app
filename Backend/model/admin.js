@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const adminSchema = new mongoose.Schema({
-
     username: {
         type: String,
         required: true,
@@ -15,7 +14,6 @@ const adminSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-
 });
 
 const ADMIN = mongoose.model('admin', adminSchema);

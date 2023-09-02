@@ -5,7 +5,8 @@ const upload = require('../middleware/multer');
 
 
 
-/*______________  export all CONTROLLERS  ______________ */
+
+/*______________  Export All Controller  ______________ */
 
 const categoryController = require('../controller/category');
 const blogController = require('../controller/blog');
@@ -15,74 +16,69 @@ const adminController = require('../controller/admin');
 
 
 
-/*_______________________________  USER Authentication_______________________________________ */
+/*_______________________________  User Authentication ___________________________________ */
 
-
-/******  user Register ******/
+/******  User Register ******/
 
 router.post('/register', userController.createUser);
 
 
-/******  get ******/
+/****** User Login  ******/
 
 router.post('/login', userController.loginUser);
 
 
-/******  update ******/
+/******  Get  ******/
 
-// router.post('/update-user', userController.updateUser);
-
-
-/******  delete ******/
-
-// router.delete('/delete-user', userController.deleteUser);
+router.get('/get-user' , userController.getUser);
 
 
+/******  Update ******/
+
+router.post('/update-user', userController.updateUser);
+
+
+/******  Delete ******/
+
+router.delete('/delete-user', userController.deleteUser);
 
 
 
 
-/*_______________________________  USER Authentication_______________________________________ */
+/*_______________________________  Admin Authentication_______________________________________ */
 
-
-/******  user Register ******/
+/******  Admin Register ******/
 
 router.post('/admin-register', adminController.createAdmin);
 
 
-/******  get ******/
+/******  Admin Login  ******/
 
 router.post('/admin-login', adminController.loginAdmin);
 
+ 
 
 
-
-
-
-
-
-/*_______________________________  CRUD OF CATEGORY ______________________________________ */
+/*_____________________________  CRUD OF CATEGORY _____________________________________ */
 
 /******  Create ******/
 
 router.post('/create-category', categoryController.createCategory);
 
 
-/******  get ******/
+/******  Get ******/
 
 router.get('/get-category', categoryController.getCategory);
 
 
-/******  update ******/
+/******  Update ******/
 
 router.post('/update-category', categoryController.updateCategory);
 
 
-/******  delete ******/
+/******  Delete ******/
 
 router.delete('/delete-category', categoryController.deleteCategory);
-
-
 
 
 
@@ -94,20 +90,23 @@ router.delete('/delete-category', categoryController.deleteCategory);
 router.post('/create-blog', upload.single('img') , blogController.createBlog);
 
 
-/******  get ******/
+/******  Get ******/
 
 router.get('/get-blog' , blogController.getBlog);
 
 
-/******  update ******/
+/******  Get by User ******/
+router.get('/get-blog-user', blogController.getuserBlog);
+
+
+/******  Update ******/
 
 router.post('/update-blog', blogController.updateBlog);
 
 
-/******  delete ******/
+/******  Delete ******/
 
 router.delete('/delete-blog', blogController.deleteBlog);
-
 
 
 module.exports = router;
