@@ -47,20 +47,20 @@ exports.loginAdmin = async function (req, res, next) {
 
             //   return success response
             res.status(200).send({
-                message: "Login Successful",
+                msg: "Login Successful",
                 email: admin.email,
                 token,
             });
 
         } else {
             res.status(400).send({
-                message: "Passwords does not match"
+                msg: "Passwords does not match"
             });
         }
 
     } catch (error) {
         res.status(404).send({
-            message: "ADMIN not found"
+            msg: "admin not found"
         });
     }
 }

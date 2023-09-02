@@ -12,8 +12,7 @@ function Admindashboard() {
     if (token) {
         return (
             <>
-              <h1> This Is Admin dashboard</h1>
-              <h1> This Is Admin dashboard</h1>
+              <h1> This is admin dashboard</h1>
             </>
         )
     }

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Nav, Navbar, Container, Row } from 'react-bootstrap';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { FiMoon, FiSearch } from "react-icons/fi";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 function Header() {
-
+    const navigate = useNavigate()
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -20,8 +20,9 @@ function Header() {
     }, []);
 
     const clickonLogout = async () => {
-        await localStorage.clear("User-token");
         setStoragetoken("");
+        localStorage.removeItem("User-token");
+        return navigate('/login?')
     }
 
 
@@ -45,7 +46,7 @@ function Header() {
                             </Nav>
                             <Button className='btn nav-icon text-dark border-0 bg-white mx-1 fs-5' onClick={handleShow}><FiSearch /></Button>
                             <Button className='btn nav-icon text-dark border-0 bg-white mx-1 fs-5'><FiMoon /></Button>
-                            {storageToken ? <Link to='/login'><Button onClick={clickonLogout} className='signin btn  px-4 mx-3 rounded-pill'>Logout</Button></Link> :
+                            {storageToken ? <Button onClick={clickonLogout} className='signin btn  px-4 mx-3 rounded-pill'>Logout</Button> :
                                 <Link to='/login'><Button className='signin btn  px-4 mx-3 rounded-pill'>Login</Button></Link>}
                         </Navbar.Collapse>
                         <Modal show={show} onHide={handleClose} className='p-0 mt-5 '>

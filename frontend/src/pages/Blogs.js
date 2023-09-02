@@ -14,11 +14,16 @@ function Blogs() {
   const [img, setImg] = useState("");
   const [editid, setEditid] = useState("");
   const [title, setTitle] = useState("");
-
+  const [show, setShow] = useState(false);
 
   //________________ GET API Data
 
   useEffect(() => {
+    // get category 
+    axios
+      .get("http://localhost:3001/get-category")
+      .then(data => setCategorydata(data.data.data))
+      .catch(error => console.log(error));
     getAPIdata();
   }, [])
 
@@ -30,11 +35,7 @@ function Blogs() {
       .then(data => setBlogdata(data.data.data))
       .catch(error => console.log(error));
 
-    // get category 
-    axios
-      .get("http://localhost:3001/get-category")
-      .then(data => setCategorydata(data.data.data))
-      .catch(error => console.log(error));
+    
   }
 
 
@@ -42,13 +43,16 @@ function Blogs() {
 
   const createBlog = async () => {
     console.log("hello");
-    const response = await axios.post("http://localhost:3001/create-blog", {
-      title: title,
-      description: description,
-      category: category,
-      img: img
-    })
-    getAPIdata();
+    //
+    const formData = new FormData();
+    formData.append("img", img[0]);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("category", category);
+
+    const response = await axios.post("http://localhost:3001/create-blog", formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+    await getAPIdata();
+    handleClose()
 
   }
 
@@ -66,27 +70,30 @@ function Blogs() {
 
   //_______________ Handle Model
 
-  const [show, setShow] = useState(false);
+ 
   const handleClose = () => {
-    if (editid) {
-      editBlog();
-    } else {
-      createBlog();
-    }
     setShow(false)
   };
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setcategory("");
+    setDescription("");
+    setImg("");
+    setTitle("");
+    setEditid("");
+    setShow(true)
+  }
 
 
   //________________ edit Blog
 
   const setData = (data) => {
+    handleShow();
     setcategory(data.category.name);
     setDescription(data.description);
     setImg(data.img);
     setTitle(data.title);
     setEditid(data._id);
-    handleShow();
+    
   }
 
   const editBlog = async () => {
@@ -148,12 +155,11 @@ function Blogs() {
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Img</Form.Label>
-                <Form.Control type="filename" value={img} />
-                <Form.Control type="file" name='img' onChange={(e) => { setImg(e.target.value) }} />
+                <Form.Control type="file" name='img' onChange={(e) => { setImg(e.target.files) }} />
               </Form.Group>
             </Form>
             <Modal.Footer>
-              <Button variant="primary" onClick={handleClose}>
+              <Button variant="primary" onClick={createBlog}>
                 Submit
               </Button>
             </Modal.Footer>
@@ -170,7 +176,7 @@ function Blogs() {
                     <Row>
                       <Col lg={4} md={12}>
                         <div className='overflow-hidden rounded-4 shadow bg-body m-2' style={{ width: '250px', height: '250px' }}>
-                          <Card.Img variant="top" src={item.img} className='blog-img  w-100 h-100   ' />
+                          <Card.Img variant="top" src={"http://localhost:3001/images/"+item.img} className='blog-img  w-100 h-100   ' />
                         </div>
                       </Col>
                       <Col lg={6} md={12}>

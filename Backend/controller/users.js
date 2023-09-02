@@ -72,67 +72,63 @@ exports.loginUser = async function (req, res, next) {
 
 // read
 
-// exports.getUser = async function (req, res, next) {
+exports.getUser = async function (req, res, next) {
 
-//     try {
+    try {
+        const getUser = await USER.find();
 
-//         const getUser = await USER.find();
+        res.status(200).json({
+            status: "Success",
+            msg: "User get Successfully",
+            data: getUser
+        })
 
-//         res.status(200).json({
-//             status: "Success",
-//             msg: "User get Successfully",
-//             data: getUser
-//         })
-
-//     } catch (error) {
-
-//         res.status(400).json({
-//             status: "Fail",
-//             msg: "User get not Successfully",
-//             data: error
-//         })
-
-//     }
-
-// }
+    } catch (error) {
+        res.status(400).json({
+            status: "Fail",
+            msg: "User get not Successfully",
+            data: error
+        })
+    }
+}
 
 
 // update
 
-// exports.updateUser = async function (req, res, next) {
-//     try {
-//         await USER.findByIdAndUpdate(req.query.id, req.body);
+exports.updateUser = async function (req, res, next) {
+    try {
+        await USER.findByIdAndUpdate(req.query.id, req.body);
 
-//         res.status(200).json({
-//             status: "Success",
-//             message: "User Update not Successfully",
-//         })
+        res.status(200).json({
+            status: "Success",
+            message: "User Update not Successfully",
+        })
 
-//     } catch (error) {
-//         res.status(400).json({
-//             status: "Fail",
-//             message: error.message,
-//             data :  error.message
-//         })
-//     }
-// }
+    } catch (error) {
+        res.status(400).json({
+            status: "Fail",
+            message: error.message,
+            data :  error.message
+        })
+    }
+}
 
 
 // delete
 
-// exports.deleteUser = async function (req, res, next) {
-//     try {
+exports.deleteUser = async function (req, res, next) {
+    try {
 
-//         await USER.findByIdAndDelete(req.query.id);
-//         res.status(200).json({
-//             status: "Success",
-//             message: "User Delete Successfully",
-//         })
+        await USER.findByIdAndDelete(req.query.id);
+        res.status(200).json({
+            status: "Success",
+            message: "User Delete Successfully",
+        })
 
-//     } catch (error) {
-//         res.status(404).json({
-//             status: "Fail",
-//             message: error.message,
-//         })
-//     }
-// }
+    } catch (error) {
+        res.status(404).json({
+            status: "Fail",
+            message: error.message,
+        })
+    }
+}

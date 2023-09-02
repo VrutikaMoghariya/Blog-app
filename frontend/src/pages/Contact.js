@@ -6,7 +6,7 @@ function Contact() {
     <>
       <Header />
       <h5>
-        This Is Contact Page
+        This is Contact Page
       </h5>
     </>
   )

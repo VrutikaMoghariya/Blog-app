@@ -6,6 +6,8 @@ exports.createBlog = async function (req, res, next) {
 
     try {
         console.log(req.body);
+        req.body.user = req.userId
+        req.body.img = req.file.filename
         const createBlog = await BLOG.create(req.body);
 
         res.status(201).json({
@@ -34,6 +36,32 @@ exports.getBlog = async function (req, res, next) {
     try {
 
         const getBlog = await BLOG.find().populate('category');
+
+        res.status(200).json({
+            status: "success",
+            msg: "Blog get Successfully",
+            data: getBlog
+        })
+
+    } catch (error) {
+
+        res.status(400).json({
+            status: "reading Fail",
+            msg: "Blog get not Success",
+            data: error
+        })
+
+    }
+
+}
+
+// read by user
+
+exports.getuserBlog = async function (req, res, next) {
+
+    try {
+
+        const getBlog = await BLOG.findById(req.userId);
 
         res.status(200).json({
             status: "success",

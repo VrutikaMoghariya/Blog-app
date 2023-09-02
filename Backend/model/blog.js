@@ -17,7 +17,8 @@ const blogSchema = new mongoose.Schema({
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'category'
-    }
+    },
+    // user: 
 });
 
 const BLOG = mongoose.model('blog', blogSchema);

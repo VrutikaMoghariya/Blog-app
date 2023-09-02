@@ -55,21 +55,19 @@ function Home() {
             {
               blogData.map((item) => {
                 return (
-                  <>
-                    <Carousel.Item>
-                      <Col >
-                        <Card>
-                          <Card.Img variant="top" src={item.img} />
-                          <Card.Body>
-                            <Card.Title >{item.title}</Card.Title>
-                            <Card.Text>
-                              {item.description}
-                            </Card.Text>
-                          </Card.Body>
-                        </Card>
-                      </Col>
-                    </Carousel.Item>
-                  </>
+                  <Carousel.Item>
+                  <Col >
+                    <Card>
+                      <Card.Img variant="top" src={item.img} />
+                      <Card.Body>
+                        <Card.Title >{item.title}</Card.Title>
+                        <Card.Text>
+                          {item.description}
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Carousel.Item>
                 )
               })
             }

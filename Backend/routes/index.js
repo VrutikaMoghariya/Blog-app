@@ -23,9 +23,14 @@ const adminController = require('../controller/admin');
 router.post('/register', userController.createUser);
 
 
-/******  get ******/
+/******  login  ******/
 
 router.post('/login', userController.loginUser);
+
+
+/******  get  ******/
+
+router.get('/get-user' , userController.getUser);
 
 
 /******  update ******/
@@ -42,15 +47,15 @@ router.post('/login', userController.loginUser);
 
 
 
-/*_______________________________  USER Authentication_______________________________________ */
+/*_______________________________  Admin Authentication_______________________________________ */
 
 
-/******  user Register ******/
+/******  Admin Register ******/
 
 router.post('/admin-register', adminController.createAdmin);
 
 
-/******  get ******/
+/******  Admin Login  ******/
 
 router.post('/admin-login', adminController.loginAdmin);
 
@@ -98,6 +103,8 @@ router.post('/create-blog', upload.single('img') , blogController.createBlog);
 
 router.get('/get-blog' , blogController.getBlog);
 
+/******  get by user ******/
+router.get('/get-blog-user', blogController.getuserBlog);
 
 /******  update ******/
 
