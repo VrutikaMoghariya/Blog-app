@@ -49,7 +49,7 @@ exports.getBlog = async function (req, res, next) {
 exports.getuserBlog = async function (req, res, next) {
 
     try {
-        const getBlog = await BLOG.find({user:req.userId}).populate('category').populate('user');
+        const getBlog = await BLOG.find({ user: req.userId }).populate('category').populate('user');
         res.status(200).json({
             status: "Success",
             msg: "User-Blog get Successfully",
@@ -70,7 +70,7 @@ exports.getuserBlog = async function (req, res, next) {
 exports.updateBlog = async function (req, res, next) {
 
     try {
-         
+
         // req.body.img = req.file.filename;
         // console.log(req.body.img);
 
@@ -79,11 +79,33 @@ exports.updateBlog = async function (req, res, next) {
 
         console.log(req.body);
 
-        const data = await BLOG.findByIdAndUpdate(req.query._id, req.body);
+
+        // Use req.body.title, req.body.description, etc., for text inputs
+        const { title, description, category } = req.body;
+
+        // Use req.file to access the uploaded file (if any)
+        const img = req.file;
+
+    
+
+        // Construct the updated blog post object
+        const updatedBlog = {
+            title,
+            description,
+            category,
+        };
+
+        // If an image was uploaded, add the image file path to the updated blog post
+        if (img) {
+            updatedBlog.img = img.path; // Assuming Multer stores uploaded files in req.file.path
+        }
+
+
+        const data = await BLOG.findByIdAndUpdate(req.query._id, updatedBlog);
         res.status(200).json({
             status: "Success",
             msg: "Blog Update Successfully",
-            data : data
+            data: data
         })
     } catch (error) {
         res.status(400).json({
@@ -98,7 +120,7 @@ exports.updateBlog = async function (req, res, next) {
 // Delete-Blog
 
 exports.deleteBlog = async function (req, res, next) {
-    
+
     try {
         await BLOG.findByIdAndDelete(req.query._id);
         res.status(200).json({
