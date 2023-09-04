@@ -11,37 +11,62 @@ function Blogs() {
   const navigate = useNavigate();
   const [blogData, setBlogdata] = useState([]);
   const [categoryData, setCategorydata] = useState([]);
+  const [title, setTitle] = useState("");
   const [category, setCategory] = useState([]);
   const [description, setDescription] = useState("");
   const [img, setImg] = useState("");
-  const [editid, setEditid] = useState("");
-  const [title, setTitle] = useState("");
+  const [editId, setEditid] = useState("");
+  const [deleteId, setDeleteId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [show, setShow] = useState(false);
+
+  //_______________ Handle Model
+
+  const handleClose = () => {
+    setShow(false)
+  };
+
+  const handleShow = () => {
+    setCategory("");
+    setDescription("");
+    setImg("");
+    setTitle("");
+    setEditid("");
+    setShow(true);
+    setIsEditing(false);
+  }
+
 
   useEffect(() => {
     const userToken = localStorage.getItem("User-token");
-    if (userToken) {
-      navigate("/blogs");
-    }
-    else {
-      navigate("/login");
+    if (!userToken) {
+      navigate('/login');
+    } else {
+      getAPIdata();
     }
   }, [navigate]);
 
 
-  //________________ GET API Data
+  //________________ Get API Data
 
   useEffect(() => {
-    axios           // get category 
+    axios           // Get Category 
       .get("http://localhost:3001/get-category")
       .then(category => setCategorydata(category.data.data))
       .catch(error => console.log(error));
-    getAPIdata();
   }, []);
 
+
   const getAPIdata = () => {
-    axios            // get Blog-data
-      .get("http://localhost:3001/get-blog")
+
+    const userToken = localStorage.getItem("User-token");
+
+    axios            // Get Blog-data
+      .get("http://localhost:3001/get-user-blog", {
+        headers: {
+          'authorization': userToken,
+        },
+      })
       .then(blog => setBlogdata(blog.data.data))
       .catch(error => console.log(error));
   };
@@ -51,59 +76,78 @@ function Blogs() {
 
   const addBlog = async () => {
 
-    const formData = new FormData();
-    formData.append("img", img[0]);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("category", category);
+    if (title && description && category && img) {
 
+      const userToken = localStorage.getItem("User-token");
 
-    if (editid) {
-       await axios.post(`http://localhost:3001/update-blog?_id=${editid}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      const formData = new FormData();
+      formData.append("img", img[0]);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("category", category);
+
+      if (isEditing && editId) {
+
+       const response =  await axios.post(`http://localhost:3001/update-blog?_id=${editId}`, formData, {
+          headers: {
+            "authorization": userToken,
+          }
+        });
+        console.log(response.data);
+
+      }
+      else {
+        await axios.post("http://localhost:3001/create-blog", formData, {
+          headers: {
+            'authorization': userToken,
+          }
+        })
+      }
+      await getAPIdata();
+      handleClose();
+
     } else {
-       await axios.post("http://localhost:3001/create-blog", formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      alert("Please fill in all required fields");
     }
-    await getAPIdata();
-    handleClose();
   }
 
 
-  //_______________ Handle Model
 
-
-  const handleClose = () => {
-    setShow(false)
-  };
-  
-  const handleShow = () => {
-    setCategory("");
-    setDescription("");
-    setImg("");
-    setTitle("");
-    setEditid("");
-    setShow(true)
-  }
-
-
-  //________________ edit Blog
+  //________________ Edit Blog
 
   const setData = (data) => {
     handleShow();
-    setCategory(data.category.name);
+    setCategory(data.category._id);
     setDescription(data.description);
     setImg(data.img);
     setTitle(data.title);
     setEditid(data._id);
+    setIsEditing(true);
   }
-
-
 
   //________________ Delete Blog
 
-  const deleteBlog = async (data) => {
-    alert("Are You Sure");
-    await axios.delete(`http://localhost:3001/delete-blog?_id=${data._id}`);
-    getAPIdata();
+  const confirmDelete = (data) => {
+    setDeleteId(data._id);
+  };
+
+  const cancelDelete = () => {
+    setDeleteId(null);
+  };
+
+  const deleteBlog = async () => {
+
+    const userToken = localStorage.getItem("User-token");
+    
+    if (deleteId) {
+      await axios.delete(`http://localhost:3001/delete-blog?_id=${deleteId}`, {
+        headers: {
+          'authorization': userToken,
+        }
+      });
+      setDeleteId(null);
+      await getAPIdata();
+    }
   };
 
 
@@ -119,8 +163,9 @@ function Blogs() {
 
           {/***************** model Form For Create and Update Blog **************/}
 
-          <Modal show={show} onHide={handleClose} >
-            <Form className='p-3 bg-light' encType="multipart/form-data" >
+          <Modal show={show} onHide={handleClose}  >
+            <Modal.Header closeButton />
+            <Form className='p-3 bg-light' enctype="multipart/form-data">
               <Form.Group className="mb-3" >
                 <Form.Label>Title</Form.Label>
                 <Form.Control type="text" placeholder="Enter Title" name='title' value={title} onChange={(e) => { setTitle(e.target.value) }} />
@@ -150,6 +195,9 @@ function Blogs() {
               </Form.Group>
             </Form>
             <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
               <Button variant="primary" onClick={addBlog}>
                 Submit
               </Button>
@@ -158,7 +206,7 @@ function Blogs() {
         </Col>
 
         {
-          blogData.map((item) => {
+          blogData.slice().reverse().map((item) => {
             return (
               <>
                 <Col >
@@ -186,7 +234,7 @@ function Blogs() {
                       </Col>
                       <Col>
                         <Button className='m-2' onClick={() => { setData(item) }}>EDIT</Button>
-                        <Button className='m-2' onClick={() => { deleteBlog(item) }}>DELETE</Button>
+                        <Button variant='danger' onClick={() => { confirmDelete(item) }}> DELETE </Button>
                       </Col>
                     </Row>
                   </Card>
@@ -198,6 +246,19 @@ function Blogs() {
       </Container>
 
       <Footer />
+
+      <Modal show={!!deleteId} onHide={cancelDelete}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this blog?</Modal.Body>
+        <Modal.Footer>
+          <Button variant='secondary' onClick={cancelDelete}>
+            Cancel
+          </Button>
+          <Button variant='danger' onClick={deleteBlog}>Delete</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }

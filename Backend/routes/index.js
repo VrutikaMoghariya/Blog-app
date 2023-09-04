@@ -30,7 +30,7 @@ router.post('/login', userController.loginUser);
 
 /******  Get  ******/
 
-router.get('/get-user' , userController.getUser);
+router.get('/get-user', userController.getUser);
 
 
 /******  Update ******/
@@ -56,7 +56,7 @@ router.post('/admin-register', adminController.createAdmin);
 
 router.post('/admin-login', adminController.loginAdmin);
 
- 
+
 
 
 /*_____________________________  CRUD OF CATEGORY _____________________________________ */
@@ -87,26 +87,26 @@ router.delete('/delete-category', categoryController.deleteCategory);
 
 /******  Create ******/
 
-router.post('/create-blog', upload.single('img') , blogController.createBlog);
+router.post('/create-blog', upload.single('img'), auth, blogController.createBlog);
 
 
 /******  Get ******/
 
-router.get('/get-blog' , blogController.getBlog);
+router.get('/get-blog', blogController.getBlog);
 
 
 /******  Get by User ******/
-router.get('/get-blog-user', blogController.getuserBlog);
+router.get('/get-user-blog', auth, blogController.getuserBlog);
 
 
 /******  Update ******/
 
-router.post('/update-blog', blogController.updateBlog);
+router.post('/update-blog', upload.single('img'), auth, blogController.updateBlog);
 
 
 /******  Delete ******/
 
-router.delete('/delete-blog', blogController.deleteBlog);
+router.delete('/delete-blog', auth, blogController.deleteBlog);
 
 
 module.exports = router;

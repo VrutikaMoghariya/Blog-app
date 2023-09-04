@@ -18,7 +18,7 @@ function Login() {
       navigate('/blogs');
     }
     if (AdminToken) {
-      navigate('/adminDashboard');
+      navigate('/admin/dashboard');
     }
   }, [navigate]);
 

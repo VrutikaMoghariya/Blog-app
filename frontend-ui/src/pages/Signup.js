@@ -24,7 +24,6 @@ function Signup() {
 
   
   const handleSubmit = async (e) => {
-
     e.preventDefault();
     const post = {
       username: username,
@@ -48,7 +47,7 @@ function Signup() {
         <Row>
           <Col></Col>
           <Col >
-            <Form className='bg-light border p-5' action='' onSubmit={handleSubmit}>
+            <Form className='bg-light border p-5' onSubmit={handleSubmit}>
               <Form.Group className="mb-3" >
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" name='username' required placeholder="Enter username" value={username} onChange={(e) => { setUsename(e.target.value) }} />

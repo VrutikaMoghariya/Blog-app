@@ -4,7 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import { SlCalender } from "react-icons/sl";
 import { Container, Row, Col, Carousel, Card, Button, Form, InputGroup } from 'react-bootstrap';
-import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub } from "react-icons/bi";
+import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub , BiUserCircle } from "react-icons/bi";
 
 function Home() {
 
@@ -25,6 +25,8 @@ function Home() {
       .then(data => setCategory(data.data.data))
       .catch(error => console.log(error));
   }, []);
+  console.log(blogData);
+
 
   return (
     <>
@@ -64,7 +66,7 @@ function Home() {
         <Row>
           <Col sm={12} lg={8}>
             {
-              blogData.map((item) => {
+              blogData.slice().reverse().map((item) => {
                 return (
                   <>
                     <Col >
@@ -92,7 +94,8 @@ function Home() {
                                 {item.description}
                               </Card.Text>
                               <Card.Footer className=" p-0 text-secondary border-0 bg-white">
-                                <SlCalender className='me-1' /> 2 days ago
+                                <SlCalender className='me-1' /> 2 days ago   
+                                <h5 className='mt-3 '><BiUserCircle/> {item.user.username}</h5>
                               </Card.Footer>
                             </Card.Body>
                           </Col>

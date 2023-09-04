@@ -34,8 +34,7 @@ exports.loginUser = async function (req, res, next) {
 
     try {
         const user = await USER.findOne({ email: req.body.email });
-        console.log(user);
-         
+        
         // compare the password entered and the hashed password found
         const isMatch = await bcrypt.compare(req.body.password, user.password);
 

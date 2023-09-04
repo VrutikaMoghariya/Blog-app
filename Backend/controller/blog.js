@@ -5,8 +5,9 @@ const BLOG = require('../model/blog');
 exports.createBlog = async function (req, res, next) {
 
     try {
-        req.body.user = req.userId;
+
         req.body.img = req.file.filename;
+        req.body.user = req.userId;
         const createBlog = await BLOG.create(req.body);
         res.status(201).json({
             status: "Success",
@@ -28,7 +29,7 @@ exports.createBlog = async function (req, res, next) {
 exports.getBlog = async function (req, res, next) {
 
     try {
-        const getBlog = await BLOG.find().populate('category');
+        const getBlog = await BLOG.find().populate('category').populate('user');
         res.status(200).json({
             status: "Success",
             msg: "Blog get Successfully",
@@ -48,7 +49,7 @@ exports.getBlog = async function (req, res, next) {
 exports.getuserBlog = async function (req, res, next) {
 
     try {
-        const getBlog = await BLOG.findById(req.userId);
+        const getBlog = await BLOG.find({user:req.userId}).populate('category').populate('user');
         res.status(200).json({
             status: "Success",
             msg: "User-Blog get Successfully",
@@ -69,10 +70,20 @@ exports.getuserBlog = async function (req, res, next) {
 exports.updateBlog = async function (req, res, next) {
 
     try {
-        await BLOG.findByIdAndUpdate(req.query._id, req.body);
+         
+        // req.body.img = req.file.filename;
+        // console.log(req.body.img);
+
+        req.body.user = req.userId;
+        console.log(req.body.user);
+
+        console.log(req.body);
+
+        const data = await BLOG.findByIdAndUpdate(req.query._id, req.body);
         res.status(200).json({
             status: "Success",
             msg: "Blog Update Successfully",
+            data : data
         })
     } catch (error) {
         res.status(400).json({
