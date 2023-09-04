@@ -32,20 +32,17 @@ function Blogs() {
   //________________ GET API Data
 
   useEffect(() => {
-    // get category 
-    axios
+    axios           // get category 
       .get("http://localhost:3001/get-category")
-      .then(data => setCategorydata(data.data.data))
+      .then(category => setCategorydata(category.data.data))
       .catch(error => console.log(error));
     getAPIdata();
   }, []);
 
   const getAPIdata = () => {
-
-    // get Blog-data 
-    axios
+    axios            // get Blog-data
       .get("http://localhost:3001/get-blog")
-      .then(data => setBlogdata(data.data.data))
+      .then(blog => setBlogdata(blog.data.data))
       .catch(error => console.log(error));
   };
 
@@ -60,7 +57,6 @@ function Blogs() {
     formData.append("description", description);
     formData.append("category", category);
 
-    console.log(editid);
 
     if (editid) {
        await axios.post(`http://localhost:3001/update-blog?_id=${editid}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })

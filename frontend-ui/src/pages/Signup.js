@@ -15,7 +15,7 @@ function Signup() {
 
   useEffect(() => {
     if (userToken) {
-      navigate("/login");
+      navigate("/blogs");
     }
     else {
       navigate("/signup");
@@ -34,8 +34,8 @@ function Signup() {
     try {
       const response = await axios.post('http://localhost:3001/register', post);
       setMsg(response.data.msg);
-      localStorage.setItem('User-token', response.data.token);
       setUsertoken(response.data.token);
+      localStorage.setItem('User-token', response.data.token);
     } catch (e) {
       setMsg(e.response.data.msg);
     }

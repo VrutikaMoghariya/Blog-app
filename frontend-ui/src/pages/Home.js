@@ -34,14 +34,14 @@ function Home() {
 
       <Container >
         <Row xs={1} md={2} >
-          <Carousel className=' py-5 w-75 mx-auto'>
+          <Carousel className=' py-5 mx-auto'>
             {
               blogData.map((item) => {
                 return (
                   <Carousel.Item>
                     <Col >
-                      <Card>
-                        <Card.Img variant="top" src={"http://localhost:3001/images/" + item.img} />
+                      <Card className='bg-light'>
+                        <Card.Img variant="top" className='w-50 mx-auto bg-info' src={"http://localhost:3001/images/" + item.img} />
                         <Card.Body >
                           <Card.Title >{item.title}</Card.Title>
                           <Card.Text>

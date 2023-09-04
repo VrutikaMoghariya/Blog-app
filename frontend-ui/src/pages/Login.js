@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
@@ -40,7 +40,7 @@ function Login() {
       if (isAdmin) {
         const response = await axios.post('http://localhost:3001/admin-login', data);
         localStorage.setItem('Admin-token', response.data.token);
-        navigate('/admin/dashboard', { replace: true });
+        navigate('/admin/dashboard');
       } else {
         const response = await axios.post('http://localhost:3001/login', data);
         localStorage.setItem('User-token', response.data.token);
@@ -48,8 +48,6 @@ function Login() {
       }
 
     } catch (e) {
-
-      console.log(e.response.data.msg);
       setMsg(e.response.data.msg);
     }
 
