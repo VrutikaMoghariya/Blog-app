@@ -81,20 +81,27 @@ function Blogs() {
       const userToken = localStorage.getItem("User-token");
 
       const formData = new FormData();
-      formData.append("img", img[0]);
+
+      console.log(typeof img);
+
+      if (typeof img == "string") {
+        formData.append("img", img);
+      }
+      else if (typeof img == "object") {
+        formData.append("img", img[0]);
+      }
+
       formData.append("title", title);
       formData.append("description", description);
       formData.append("category", category);
 
       if (isEditing && editId) {
 
-       const response =  await axios.post(`http://localhost:3001/update-blog?_id=${editId}`, formData, {
+        const response = await axios.post(`http://localhost:3001/update-blog?_id=${editId}`, formData, {
           headers: {
             "authorization": userToken,
           }
         });
-        console.log(response.data);
-
       }
       else {
         await axios.post("http://localhost:3001/create-blog", formData, {
@@ -138,7 +145,7 @@ function Blogs() {
   const deleteBlog = async () => {
 
     const userToken = localStorage.getItem("User-token");
-    
+
     if (deleteId) {
       await axios.delete(`http://localhost:3001/delete-blog?_id=${deleteId}`, {
         headers: {

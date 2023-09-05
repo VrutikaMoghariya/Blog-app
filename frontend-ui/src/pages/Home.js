@@ -5,15 +5,25 @@ import Footer from './Footer';
 import { SlCalender } from "react-icons/sl";
 import { Container, Row, Col, Carousel, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub , BiUserCircle } from "react-icons/bi";
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
 
+  const navigate = useNavigate();
   const [blogData, setBlogdata] = useState([]);
   const [category, setCategory] = useState([]);
 
   //_________________ getdata from API
 
   useEffect(() => {
+          
+    const adminToken =  localStorage.getItem("Admin-token");
+    if (!adminToken) {
+      navigate("/home");
+    }
+    else {
+      navigate("/admin/dashboard");
+    }
 
     axios     // get Blog-data from API
       .get("http://localhost:3001/get-blog")
@@ -24,8 +34,8 @@ function Home() {
       .get("http://localhost:3001/get-category")
       .then(data => setCategory(data.data.data))
       .catch(error => console.log(error));
-  }, []);
-  console.log(blogData);
+
+  }, [navigate]);
 
 
   return (

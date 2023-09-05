@@ -1,5 +1,6 @@
 :root{
   --theme-color :  #FB2576 ;
+  --theme-admin : #090979 ;
 }
 
 .theme-bg-pink{
@@ -77,4 +78,30 @@ transition: all ease-in-out 0.5s;
   text-underline-offset: 8px !important;
   text-decoration-thickness: 2px !important;
   transition: all ease-in-out 0.2s ;
+}
+
+
+/* VerticalNavbar.css */
+#vertical-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  padding: 1rem;
+  width: 250px; 
+  /* z-index: 1; */
+}
+
+
+.navbar {
+  background-color: #545353; /* Set your desired background color */
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+.nav-item {
+  font-size: 1rem;
+  font-weight: bold;
 }

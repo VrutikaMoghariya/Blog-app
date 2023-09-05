@@ -71,42 +71,22 @@ exports.updateBlog = async function (req, res, next) {
 
     try {
 
-        // req.body.img = req.file.filename;
-        // console.log(req.body.img);
+        if (req.file) {
 
-        req.body.user = req.userId;
-        console.log(req.body.user);
+            req.body.img = req.file.filename;
 
-        console.log(req.body);
+        } else {
 
+            req.body.img = req.body.img;
 
-        // Use req.body.title, req.body.description, etc., for text inputs
-        const { title, description, category } = req.body;
-
-        // Use req.file to access the uploaded file (if any)
-        const img = req.file;
-
-    
-
-        // Construct the updated blog post object
-        const updatedBlog = {
-            title,
-            description,
-            category,
-        };
-
-        // If an image was uploaded, add the image file path to the updated blog post
-        if (img) {
-            updatedBlog.img = img.path; // Assuming Multer stores uploaded files in req.file.path
         }
-
-
-        const data = await BLOG.findByIdAndUpdate(req.query._id, updatedBlog);
+        
+        await BLOG.findByIdAndUpdate(req.query._id, req.body);
         res.status(200).json({
             status: "Success",
             msg: "Blog Update Successfully",
-            data: data
         })
+
     } catch (error) {
         res.status(400).json({
             status: "Fail",

@@ -11,6 +11,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
 
+
   useEffect(() => {
     const userToken = localStorage.getItem("User-token");
     const AdminToken = localStorage.getItem("Admin-token");
@@ -19,6 +20,8 @@ function Login() {
     }
     if (AdminToken) {
       navigate('/admin/dashboard');
+    } else {
+      navigate('/login');
     }
   }, [navigate]);
 
@@ -53,7 +56,6 @@ function Login() {
 
   };
 
-
   return (
     <>
       <Header />
@@ -76,7 +78,6 @@ function Login() {
               Don't have an account yet? <Link to="/signup">Sign Up</Link>
               <h4 className='mx-auto text-danger mt-5'> {msg} </h4>
             </div>
-
           </Col>
           <Col></Col>
         </Row>
