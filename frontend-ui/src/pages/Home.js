@@ -19,7 +19,7 @@ function Home() {
           
     const adminToken =  localStorage.getItem("Admin-token");
     if (!adminToken) {
-      navigate("/home");
+      navigate("/");
     }
     else {
       navigate("/admin/dashboard");
