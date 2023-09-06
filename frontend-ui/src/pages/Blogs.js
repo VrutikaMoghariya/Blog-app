@@ -16,8 +16,8 @@ function Blogs() {
   const [description, setDescription] = useState("");
   const [img, setImg] = useState("");
   const [editId, setEditid] = useState("");
-  const [deleteId, setDeleteId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
   const [show, setShow] = useState(false);
 
   //_______________ Handle Model
@@ -36,6 +36,8 @@ function Blogs() {
     setIsEditing(false);
   }
 
+
+  //_______________ Navigate Page
 
   useEffect(() => {
     const userToken = localStorage.getItem("User-token");
@@ -57,11 +59,13 @@ function Blogs() {
   }, []);
 
 
+  //________________ Get Blog API Data
+
   const getAPIdata = () => {
 
     const userToken = localStorage.getItem("User-token");
 
-    axios            // Get Blog-data
+    axios
       .get("http://localhost:3001/get-user-blog", {
         headers: {
           'authorization': userToken,
@@ -97,18 +101,29 @@ function Blogs() {
 
       if (isEditing && editId) {
 
-        const response = await axios.post(`http://localhost:3001/update-blog?_id=${editId}`, formData, {
-          headers: {
-            "authorization": userToken,
-          }
-        });
+        try {
+          await axios.post(`http://localhost:3001/update-blog?_id=${editId}`, formData, {
+            headers: {
+              "authorization": userToken,
+            }
+          });
+        } catch (error) {
+          console.error("Edit blog Error:", error);
+        }
+
       }
       else {
-        await axios.post("http://localhost:3001/create-blog", formData, {
-          headers: {
-            'authorization': userToken,
-          }
-        })
+
+        try {
+          await axios.post("http://localhost:3001/create-blog", formData, {
+            headers: {
+              'authorization': userToken,
+            }
+          })
+        } catch (error) {
+          console.error("Create blog Error:", error);
+        }
+
       }
       await getAPIdata();
       handleClose();
@@ -168,48 +183,7 @@ function Blogs() {
         </Col>
         <Col>
 
-          {/***************** model Form For Create and Update Blog **************/}
 
-          <Modal show={show} onHide={handleClose}  >
-            <Modal.Header closeButton />
-            <Form className='p-3 bg-light' enctype="multipart/form-data">
-              <Form.Group className="mb-3" >
-                <Form.Label>Title</Form.Label>
-                <Form.Control type="text" placeholder="Enter Title" name='title' value={title} onChange={(e) => { setTitle(e.target.value) }} />
-              </Form.Group>
-              <Form.Group className="mb-3" >
-                <Form.Label>Description</Form.Label>
-                <Form.Control type="text" as="textarea" rows={3} name='description' placeholder="Enter Description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
-              </Form.Group>
-              <Form.Group className="mb-3" >
-                <Form.Label>Category</Form.Label>
-                <Form.Select name='category' value={category} defaultValue={category} onChange={(e) => { setCategory(e.target.value) }}>
-                  <option>Select category</option>
-                  {
-                    categoryData.map((item) => {
-                      return (
-                        <>
-                          <option value={item._id}>{item.name}</option>
-                        </>
-                      )
-                    })
-                  }
-                </Form.Select>
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Img</Form.Label>
-                <Form.Control type="file" name='img' onChange={(e) => { setImg(e.target.files) }} />
-              </Form.Group>
-            </Form>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={addBlog}>
-                Submit
-              </Button>
-            </Modal.Footer>
-          </Modal>
         </Col>
 
         {
@@ -228,7 +202,7 @@ function Blogs() {
                         <Card.Body className='ps-3'>
                           <Button style={{ backgroundColor: ' #EFF1F4' }} className='rounded-pill fs-6 category-btn text-capitalize border-0 text-dark px-3 py-1 mb-3'>
                             <svg height="20" width="20">
-                              <circle cx="8" cy="8" r="4" fill="#ff6347" />
+                              <circle cx="8" cy="8" r="4" fill={item.category.colorCode} />
                             </svg>
                             {item.category.name}
                           </Button>
@@ -254,6 +228,8 @@ function Blogs() {
 
       <Footer />
 
+      {/***************** model Form Delete Blog **************/}
+
       <Modal show={!!deleteId} onHide={cancelDelete}>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
@@ -264,6 +240,49 @@ function Blogs() {
             Cancel
           </Button>
           <Button variant='danger' onClick={deleteBlog}>Delete</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/***************** model Form For Create and Update Blog **************/}
+
+      <Modal show={show} onHide={handleClose}  >
+        <Modal.Header closeButton />
+        <Form className='p-3 bg-light' encType="multipart/form-data">
+          <Form.Group className="mb-3" >
+            <Form.Label>Title</Form.Label>
+            <Form.Control type="text" placeholder="Enter Title" name='title' value={title} onChange={(e) => { setTitle(e.target.value) }} />
+          </Form.Group>
+          <Form.Group className="mb-3" >
+            <Form.Label>Description</Form.Label>
+            <Form.Control type="text" as="textarea" rows={3} name='description' placeholder="Enter Description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
+          </Form.Group>
+          <Form.Group className="mb-3" >
+            <Form.Label>Category</Form.Label>
+            <Form.Select name='category' value={category} defaultValue={category} onChange={(e) => { setCategory(e.target.value) }}>
+              <option>Select category</option>
+              {
+                categoryData.map((item) => {
+                  return (
+                    <>
+                      <option value={item._id}>{item.name}</option>
+                    </>
+                  )
+                })
+              }
+            </Form.Select>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Img</Form.Label>
+            <Form.Control type="file" name='img' onChange={(e) => { setImg(e.target.files) }} />
+          </Form.Group>
+        </Form>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={addBlog}>
+            Submit
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

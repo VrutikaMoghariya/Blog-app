@@ -92,7 +92,7 @@ function Home() {
                               <Card.Title title={item.description} className='blog-title ' >
                                 <Button style={{ backgroundColor: ' #EFF1F4' }} className='rounded-pill fs-6 category-btn text-capitalize border-0 text-dark px-3 py-1 mb-3'>
                                   <svg height="20" width="20">
-                                    <circle cx="8" cy="8" r="4" fill="#ff6347" />
+                                    <circle cx="8" cy="8" r="4" fill={item.category.colorCode} />
                                   </svg>
                                   {item.category.name}
                                 </Button>
@@ -156,7 +156,7 @@ function Home() {
                       <>
                         <Button style={{ backgroundColor: ' #EFF1F4', fontSize: 'small' }} className='rounded-pill  category-btn text-capitalize border-0 text-dark px-2 py-1  m-2 '>
                           <svg height="20" width="20">
-                            <circle cx="8" cy="8" r="4" fill="#ff6347" />
+                            <circle cx="8" cy="8" r="4" fill={item.colorCode} />
                           </svg>
                           {item.name}
                         </Button>

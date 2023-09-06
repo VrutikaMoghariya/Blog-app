@@ -7,7 +7,7 @@ import Header from './Header';
 function Signup() {
 
   const navigate = useNavigate();
-  const [username, setUsename] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
@@ -26,7 +26,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const post = {
-      username: username,
+      name: name,
       email: email,
       password: password
     }
@@ -50,7 +50,7 @@ function Signup() {
             <Form className='bg-light border p-5' onSubmit={handleSubmit}>
               <Form.Group className="mb-3" >
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" name='username' required placeholder="Enter username" value={username} onChange={(e) => { setUsename(e.target.value) }} />
+                <Form.Control type="text" name='name' required placeholder="Enter name" value={name} onChange={(e) => { setName(e.target.value) }} />
               </Form.Group>
               <Form.Group className="mb-3" >
                 <Form.Label>Email address</Form.Label>

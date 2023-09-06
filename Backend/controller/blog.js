@@ -72,13 +72,9 @@ exports.updateBlog = async function (req, res, next) {
     try {
 
         if (req.file) {
-
             req.body.img = req.file.filename;
-
         } else {
-
             req.body.img = req.body.img;
-
         }
         
         await BLOG.findByIdAndUpdate(req.query._id, req.body);

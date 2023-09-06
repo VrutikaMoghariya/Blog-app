@@ -1,133 +1,332 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
+import Userstable from './Userstable';
+import Blogstable from './Blogstable';
+import { Button, Modal, Form } from 'react-bootstrap';
 
 function Admindashboard() {
 
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [admin, setAdmin] = useState("");
+    const [blogData, setBlogdata] = useState([]);
+    const [categoryData, setCategorydata] = useState([]);
+    const [userData, setUserdata] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [deleteId, setDeleteId] = useState(null);
+    const [editId, setEditid] = useState("");
+    const [isEditing, setIsEditing] = useState(false);
+    const [show, setShow] = useState(false);
+    const [name, setName] = useState("");
+    const [colorCode, setColorcode] = useState("");
 
-  useEffect(() => {
-    const adminToken = localStorage.getItem("Admin-token");
-    if (adminToken) {
-      navigate("/admin/dashboard");
+    useEffect(() => {
+
+        const adminToken = localStorage.getItem("Admin-token");
+        setAdmin(JSON.parse(localStorage.getItem('Admin-data')));
+
+        if (adminToken) {
+            navigate("/admin/dashboard");
+        }
+        else {
+            navigate("/login");
+        }
+
+        axios     // get Blog-data from API
+            .get("http://localhost:3001/get-blog")
+            .then(data => setBlogdata(data.data.data))
+            .catch(error => console.log(error));
+
+        getAPIdata();   // get category from API
+
+        axios    // get User from API
+            .get("http://localhost:3001/get-user")
+            .then(data => setUserdata(data.data.data))
+            .catch(error => console.log(error));
+
+    }, [navigate]);
+
+
+    // _______________Get Category API Data
+
+    const getAPIdata = () => {
+
+        axios
+            .get("http://localhost:3001/get-category")
+            .then(data => {
+                setCategorydata(data.data.data);
+                setIsLoading(false);
+            })
+            .catch(error => console.log(error));
     }
-    else {
-      navigate("/login");
+
+    const isValidColorCode = (code) => /^#[0-9A-Fa-f]{6}$/.test(code);
+
+    // ___________ Edit category
+
+    const setData = (data) => {
+        handleShow();
+        setName(data.name);
+        setColorcode(data.colorCode);
+        setEditid(data._id);
+        setIsEditing(true);
     }
-  }, [navigate]);
 
-  return (
-    <>
+    const handleClose = () => {
+        setShow(false)
+    };
 
-    <div className='d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary'>
-    <AdminSidebar />
-    <div className='h-screen flex-grow-1 overflow-y-lg-auto'>
-    <AdminHeader />
+    const handleShow = () => {
+        setName("");
+        setColorcode("");
+        setShow(true);
+        setIsEditing(false);
+    }
 
-    <main className="py-6 bg-surface-secondary">
-            <div className="container-fluid">
-                <div className="row g-6 mb-6">
-                    <div className="col-xl-3 col-sm-6 col-12">
-                        <div className="card shadow border-0">
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col">
-                                        <span className="h6 font-semibold text-muted text-sm d-block mb-2">Budget</span>
-                                        <span className="h3 font-bold mb-0">$750.90</span>
-                                    </div>
-                                    <div className="col-auto">
-                                        <div className="icon icon-shape bg-tertiary text-white text-lg rounded-circle">
-                                            <i className="bi bi-credit-card"></i>
+    const addCategory = async () => {
+
+        if (name && colorCode && isValidColorCode(colorCode)) {
+
+            const formattedColorCode = colorCode.startsWith("#") ? colorCode : `#${colorCode}`;
+
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("colorCode", formattedColorCode);
+
+            if (editId && isEditing) {
+                try {
+                    await axios.post(`http://localhost:3001/update-category?_id=${editId}`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+                } catch (error) {
+                    console.error("Edit Category Error:", error);
+                }
+
+            } else {
+                try {
+                    await axios.post(`http://localhost:3001/create-category`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data', // Set the correct content type
+                        },
+                    });
+                } catch (error) {
+                    console.error("Create Category Error:", error);
+
+                }
+            }
+            await getAPIdata();
+            handleClose();
+        } else {
+            alert("Please fill in all required fields and provide a valid color code in the format #rrggbb");
+        }
+
+    }
+
+
+    // ____________ Delete category
+
+    const confirmDelete = (data) => {
+        setDeleteId(data._id);
+    };
+
+    const cancelDelete = () => {
+        setDeleteId(null);
+    };
+
+    const deleteCategory = async () => {
+        if (deleteId) {
+            await axios.delete(`http://localhost:3001/delete-category?_id=${deleteId}`);
+            setDeleteId(null);
+            await getAPIdata();
+        }
+    }
+
+
+    return (
+        <>
+            <div className='d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary'>
+                <AdminSidebar />
+                <div className='h-screen flex-grow-1 overflow-y-lg-auto'>
+                    <AdminHeader admin={admin} />
+                    <main className="py-5 px-2 bg-surface-secondary">
+                        <div className="container-fluid">
+                            <div className="row g-6 mb-6">
+                                <div className="col-xl-4 col-12">
+                                    <div className="card shadow border-0 m-3 p-3">
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col">
+                                                    <span className="fs-4 font-semibold text-muted text-sm d-block mb-2">Blog-Posts</span>
+                                                    <span className="fs-2 font-bold mb-0">{blogData.length}</span>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div className="icon icon-shape bg-primary text-white text-lg rounded-2 p-5 fs-1">
+                                                        <i className="bi bi-book"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-2 mb-0 text-sm">
-                                    <span className="badge badge-pill bg-soft-success text-success me-2">
-                                        <i className="bi bi-arrow-up me-1"></i>13%
-                                    </span>
-                                    <span className="text-nowrap text-xs text-muted">Since last month</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 col-12">
-                        <div className="card shadow border-0">
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col">
-                                        <span className="h6 font-semibold text-muted text-sm d-block mb-2">New projects</span>
-                                        <span className="h3 font-bold mb-0">215</span>
-                                    </div>
-                                    <div className="col-auto">
-                                        <div className="icon icon-shape bg-primary text-white text-lg rounded-circle">
-                                            <i className="bi bi-people"></i>
+                                <div className="col-xl-4 col-12">
+                                    <div className="card shadow border-0 m-3 p-3" >
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col">
+                                                    <span className="fs-4 font-semibold text-muted text-sm d-block mb-2">Category-tags</span>
+                                                    <span className="fs-2 font-bold mb-0">{categoryData.length}</span>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div className="icon icon-shape bg-info text-white text-lg rounded-2 p-5 fs-1">
+                                                        <i className="bi bi-bookmarks"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-2 mb-0 text-sm">
-                                    <span className="badge badge-pill bg-soft-success text-success me-2">
-                                        <i className="bi bi-arrow-up me-1"></i>30%
-                                    </span>
-                                    <span className="text-nowrap text-xs text-muted">Since last month</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 col-12">
-                        <div className="card shadow border-0">
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col">
-                                        <span className="h6 font-semibold text-muted text-sm d-block mb-2">Total hours</span>
-                                        <span className="h3 font-bold mb-0">1.400</span>
-                                    </div>
-                                    <div className="col-auto">
-                                        <div className="icon icon-shape bg-info text-white text-lg rounded-circle">
-                                            <i className="bi bi-clock-history"></i>
+                                <div className="col-xl-4 col-12 ">
+                                    <div className="card shadow border-0 m-3 p-3">
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col">
+                                                    <span className="fs-4 font-semibold text-muted text-sm d-block mb-2">Users</span>
+                                                    <span className="fs-2 font-bold mb-0">{userData.length}</span>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <div className="icon icon-shape bg-warning text-white text-lg rounded-2 p-5 fs-1">
+                                                        <i className="bi bi-people"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-2 mb-0 text-sm">
-                                    <span className="badge badge-pill bg-soft-danger text-danger me-2">
-                                        <i className="bi bi-arrow-down me-1"></i>-5%
-                                    </span>
-                                    <span className="text-nowrap text-xs text-muted">Since last month</span>
-                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-xl-3 col-sm-6 col-12">
-                        <div className="card shadow border-0">
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col">
-                                        <span className="h6 font-semibold text-muted text-sm d-block mb-2">Work load</span>
-                                        <span className="h3 font-bold mb-0">95%</span>
-                                    </div>
-                                    <div className="col-auto">
-                                        <div className="icon icon-shape bg-warning text-white text-lg rounded-circle">
-                                            <i className="bi bi-minecart-loaded"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mt-2 mb-0 text-sm">
-                                    <span className="badge badge-pill bg-soft-success text-success me-2">
-                                        <i className="bi bi-arrow-up me-1"></i>10%
-                                    </span>
-                                    <span className="text-nowrap text-xs text-muted">Since last month</span>
-                                </div>
+                        <div className="container-fluid p-4 " >
+                            <h3 className='m-3' ><i className="bi bi-bookmarks"></i> Category Tags
+                                <button className="ms-3 btn btn-outline-primary fs-5 p-1" onClick={handleShow}>
+                                    <i className="bi bi-plus me-1"></i>Create
+                                </button>
+                            </h3>
+                            <div className='rounded-3 p-3 bg-white shadow '>
+                                <table className="table " >
+                                    <thead>
+                                        <tr>
+                                            <th className='fs-6 ps-4'>Sr No.</th>
+                                            <th className='fs-6 ps-4'>Name</th>
+                                            <th className='fs-6 ps-4'>Color</th>
+                                            <th className='fs-6 ps-4'>Edit</th>
+                                            <th className='fs-6 ps-4'>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody >
+                                        {isLoading ? (
+                                            <tr>
+                                                <td colSpan="3">Loading...</td>
+                                            </tr>
+                                        ) : (
+                                            categoryData.map((data, index) => {
+                                                return (
+                                                    <>
+                                                        <tr>
+                                                            <td className='ps-4'>{index + 1}</td>
+                                                            <td className='ps-4'>{data.name}</td>
+                                                            <td className='ps-4'>
+                                                                <div
+                                                                    style={{
+                                                                        backgroundColor: data.colorCode,
+                                                                        width: '20px',
+                                                                        height: '20px',
+                                                                        borderRadius: '50%',
+                                                                        display: 'inline-block',
+                                                                    }}
+                                                                ></div>{data.colorCode}
+                                                            </td>
+                                                            <td className='ps-4'>
+                                                                <button className="btn btn-light" onClick={() => { setData(data) }}>
+                                                                    <i className="bi bi-pencil"></i>
+                                                                </button>
+                                                            </td>
+                                                            <td className='ps-4'>
+                                                                <button className="btn btn-light" onClick={() => { confirmDelete(data) }}>
+                                                                    <i className="bi bi-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </>
+                                                )
+                                            })
+                                        )}
+                                    </tbody>
+
+                                    {/* Model For Delete Confirmation */}
+                                    <Modal show={!!deleteId} onHide={cancelDelete}>
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Confirm Deletion</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>Are you sure you want to delete this blog?</Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant='secondary' onClick={cancelDelete}>
+                                                Cancel
+                                            </Button>
+                                            <Button variant='danger' onClick={deleteCategory}>Delete</Button>
+                                        </Modal.Footer>
+                                    </Modal>
+
+                                    {/* Model For Edit and Create */}
+                                    <Modal show={show} onHide={handleClose} >
+                                        <Modal.Header closeButton  >
+                                            <h4 className='text-primary'>Category Tag</h4>
+                                        </Modal.Header>
+                                        <Form className='p-3 bg-light' encType='multipart/form-data'>
+                                            <Form.Group className="mb-3" >
+                                                <Form.Label>Name</Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Enter name"
+                                                    name="name"
+                                                    value={name}
+                                                    onChange={(e) => { setName(e.target.value) }}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3" >
+                                                <Form.Label>Color-Code</Form.Label>
+                                                <Form.Control
+                                                    type="color"
+                                                    name="colorCode"
+                                                    value={colorCode}
+                                                    onChange={(e) => { setColorcode(e.target.value) }}
+                                                />
+                                            </Form.Group>
+                                        </Form>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={handleClose}>
+                                                Close
+                                            </Button>
+                                            <Button variant="primary" onClick={addCategory}>
+                                                Submit
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Modal>
+                                </table>
                             </div>
                         </div>
-                    </div>
+
+                        <Userstable userData={userData} />
+                        <Blogstable blogData={blogData} />
+
+                    </main>
                 </div>
             </div>
-        </main>
-    </div>
-    </div>
-            
-    </>
-  )
+
+        </>
+    )
 }
 
 export default Admindashboard;

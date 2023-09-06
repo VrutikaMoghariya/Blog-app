@@ -3,7 +3,6 @@
 /* Bootstrap Icons */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.0/font/bootstrap-icons.min.css");
 
-
 :root{
   --theme-color :  #FB2576 ;
   --theme-admin : #090979 ;
@@ -110,4 +109,14 @@ transition: all ease-in-out 0.5s;
 .nav-item {
   font-size: 1rem;
   font-weight: bold;
+}
+
+
+
+/* blog-posts table td   */
+td {
+  white-space: nowrap;        /* Prevent text from wrapping */
+  overflow: hidden;           /* Hide overflow */
+  text-overflow: ellipsis;    /* Display ellipsis (...) for overflowed text */
+  max-width: 100px;    /* Display ellipsis (...) for overflowed text */
 }

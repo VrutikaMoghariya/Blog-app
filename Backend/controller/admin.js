@@ -44,7 +44,7 @@ exports.loginAdmin = async function (req, res, next) {
             res.status(200).json({                                             //   return success response
                 status : "Success",
                 msg: "Admin Login Successfully",
-                email: admin.email,
+                data: admin,
                 token : token,
             });
         } else {

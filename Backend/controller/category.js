@@ -5,6 +5,7 @@ const CATEGORY = require('../model/category');
 exports.createCategory = async function (req, res, next) {
 
     try {
+        console.log(req.body);
         const createCategory = await CATEGORY.create(req.body);
         res.status(201).json({
             status: "Success",
@@ -46,10 +47,12 @@ exports.getCategory = async function (req, res, next) {
 
 exports.updateCategory = async function (req, res, next) {
     try {
-        await CATEGORY.findByIdAndUpdate(req.query._id, req.body);
+        console.log(req.body.name);
+        const data = await CATEGORY.findByIdAndUpdate(req.query._id , req.body);
         res.status(200).json({
             status: "Success",
             msg: "Category Update Successfully",
+            data : data
         })
     } catch (error) {
         res.status(400).json({

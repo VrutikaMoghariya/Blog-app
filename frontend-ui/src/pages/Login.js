@@ -11,16 +11,17 @@ function Login() {
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
 
-
+  
   useEffect(() => {
+
     const userToken = localStorage.getItem("User-token");
     const AdminToken = localStorage.getItem("Admin-token");
+    
     if (userToken) {
       navigate('/blogs');
-    }
-    if (AdminToken) {
+    }else if (AdminToken) {
       navigate('/admin/dashboard');
-    } else {
+    }else{
       navigate('/login');
     }
   }, [navigate]);
@@ -41,9 +42,19 @@ function Login() {
       }
 
       if (isAdmin) {
+        
         const response = await axios.post('http://localhost:3001/admin-login', data);
-        localStorage.setItem('Admin-token', response.data.token);
+
         navigate('/admin/dashboard');
+
+        const adminData = {
+          name: response.data.data.name,
+          email: response.data.data.email
+        }
+        localStorage.setItem('Admin-token', response.data.token);
+        localStorage.setItem('Admin-data', JSON.stringify(adminData));
+
+
       } else {
         const response = await axios.post('http://localhost:3001/login', data);
         localStorage.setItem('User-token', response.data.token);
