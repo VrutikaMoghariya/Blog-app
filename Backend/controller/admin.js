@@ -7,9 +7,11 @@ var jwt = require('jsonwebtoken');
 exports.createAdmin = async function (req, res, next) {
 
     try {
+
         req.body.password = await bcrypt.hash(req.body.password, 10);  // hash the password
 
         const createAdmin = await ADMIN.create(req.body);
+
         const token = jwt.sign({adminId: createAdmin._id}, "RANDOM-TOKEN");
 
         // return success if the new Admin is added to the database successfully
@@ -59,5 +61,26 @@ exports.loginAdmin = async function (req, res, next) {
             msg: "Admin not Found",
             data: error
         });
+    }
+}
+
+
+//Get Admin
+
+exports.getAdmin = async function (req, res, next) {
+
+    try {
+        const getAdmin = await ADMIN.find();
+        res.status(200).json({
+            status: "Success",
+            msg: "Admin get Successfully",
+            data: getAdmin
+        })
+    } catch (error) {
+        res.status(400).json({
+            status: "Fail",
+            msg: "Admin not get Successfully",
+            data: error
+        })
     }
 }

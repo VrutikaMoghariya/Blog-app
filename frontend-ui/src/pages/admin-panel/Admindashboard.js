@@ -62,7 +62,7 @@ function Admindashboard() {
             .catch(error => console.log(error));
     }
 
-    const isValidColorCode = (code) => /^#[0-9A-Fa-f]{6}$/.test(code);
+    // const isValidColorCode = (code) => /^#[0-9A-Fa-f]{6}$/.test(code);
 
     // ___________ Edit category
 
@@ -87,39 +87,29 @@ function Admindashboard() {
 
     const addCategory = async () => {
 
-        if (name && colorCode && isValidColorCode(colorCode)) {
+        if (name && colorCode) {
 
-            const formattedColorCode = colorCode.startsWith("#") ? colorCode : `#${colorCode}`;
-
-            const formData = new FormData();
-            formData.append("name", name);
-            formData.append("colorCode", formattedColorCode);
-
+            const data = {
+                name : name,
+                colorCode : colorCode
+            }
             if (editId && isEditing) {
                 try {
-                    await axios.post(`http://localhost:3001/update-category?_id=${editId}`, formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                        },
-                    });
+                    await axios.post(`http://localhost:3001/update-category?_id=${editId}`, data );
                 } catch (error) {
                     console.error("Edit Category Error:", error);
                 }
 
             } else {
                 try {
-                    await axios.post(`http://localhost:3001/create-category`, formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data', // Set the correct content type
-                        },
-                    });
+                    await axios.post(`http://localhost:3001/create-category`, data);
                 } catch (error) {
                     console.error("Create Category Error:", error);
-
                 }
             }
             await getAPIdata();
             handleClose();
+
         } else {
             alert("Please fill in all required fields and provide a valid color code in the format #rrggbb");
         }
@@ -160,11 +150,11 @@ function Admindashboard() {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col">
-                                                    <span className="fs-4 font-semibold text-muted text-sm d-block mb-2">Blog-Posts</span>
+                                                    <span className="fs-sm-4 fs-5 font-semibold text-muted text-sm d-block mb-2">Blog-Posts</span>
                                                     <span className="fs-2 font-bold mb-0">{blogData.length}</span>
                                                 </div>
                                                 <div className="col-auto">
-                                                    <div className="icon icon-shape bg-primary text-white text-lg rounded-2 p-5 fs-1">
+                                                    <div className="icon icon-shape bg-primary text-white text-lg rounded-2 p-0 p-md-5 p-sm-2 fs-1">
                                                         <i className="bi bi-book"></i>
                                                     </div>
                                                 </div>
@@ -177,11 +167,11 @@ function Admindashboard() {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col">
-                                                    <span className="fs-4 font-semibold text-muted text-sm d-block mb-2">Category-tags</span>
+                                                    <span className="fs-sm-4 fs-5 font-semibold text-muted text-sm d-block mb-2">Category-tags</span>
                                                     <span className="fs-2 font-bold mb-0">{categoryData.length}</span>
                                                 </div>
                                                 <div className="col-auto">
-                                                    <div className="icon icon-shape bg-info text-white text-lg rounded-2 p-5 fs-1">
+                                                    <div className="icon icon-shape bg-info text-white text-lg rounded-2 p-0 p-md-5 p-sm-2 fs-1">
                                                         <i className="bi bi-bookmarks"></i>
                                                     </div>
                                                 </div>
@@ -194,11 +184,11 @@ function Admindashboard() {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col">
-                                                    <span className="fs-4 font-semibold text-muted text-sm d-block mb-2">Users</span>
+                                                    <span className="fs-sm-4 fs-5 font-semibold text-muted text-sm d-block mb-2">Users</span>
                                                     <span className="fs-2 font-bold mb-0">{userData.length}</span>
                                                 </div>
                                                 <div className="col-auto">
-                                                    <div className="icon icon-shape bg-warning text-white text-lg rounded-2 p-5 fs-1">
+                                                    <div className="icon icon-shape bg-warning text-white text-lg rounded-2 p-0 p-md-5 p-sm-2 fs-1">
                                                         <i className="bi bi-people"></i>
                                                     </div>
                                                 </div>
@@ -284,7 +274,7 @@ function Admindashboard() {
                                         <Modal.Header closeButton  >
                                             <h4 className='text-primary'>Category Tag</h4>
                                         </Modal.Header>
-                                        <Form className='p-3 bg-light' encType='multipart/form-data'>
+                                        <Form className='p-3 bg-light'>
                                             <Form.Group className="mb-3" >
                                                 <Form.Label>Name</Form.Label>
                                                 <Form.Control

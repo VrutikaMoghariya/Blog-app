@@ -56,6 +56,10 @@ router.post('/admin-register', adminController.createAdmin);
 
 router.post('/admin-login', adminController.loginAdmin);
 
+/******  Get Admin ******/
+
+router.get('/get-admin', adminController.getAdmin);
+
 
 
 
