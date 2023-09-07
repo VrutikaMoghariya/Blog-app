@@ -29,7 +29,7 @@ exports.createBlog = async function (req, res, next) {
 exports.getBlog = async function (req, res, next) {
 
     try {
-        const getBlog = await BLOG.find().populate('category').populate('user');
+        const getBlog = await BLOG.find().populate('category').populate('user').sort({ createdAt: -1 });
         res.status(200).json({
             status: "Success",
             msg: "Blog get Successfully",
