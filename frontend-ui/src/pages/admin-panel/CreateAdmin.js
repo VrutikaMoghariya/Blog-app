@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
-<<<<<<< HEAD
 import { Button, Form } from 'react-bootstrap';
-=======
+import {useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { Button, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
->>>>>>> badbf1fcb073cda826fd863195afa5bbd19a1d28
 
 function CreateAdmin() {
 
@@ -46,8 +42,8 @@ function CreateAdmin() {
                 setMsg(e.response.data.msg);
             }
         }
-
     }
+    
     return (
         <>
             <div className='d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary'>
@@ -71,39 +67,6 @@ function CreateAdmin() {
                             <Button type="submit">Create</Button>
                             <h5 className='mt-4 mb-0'>{msg}</h5>
                         </Form>
-<<<<<<< HEAD
-=======
-
-                        <div className="container-fluid p-2" >
-                            <h3 className='m-3'><i className="bi bi-people"></i> Admin</h3>
-                            <div className='rounded-3 p-3 bg-white shadow w-50'>
-                                <table className="table " >
-                                    <thead className='bg-white '>
-                                        <tr>
-                                            <th className='fs-6 ps-4'>No.</th>
-                                            <th className='fs-6 ps-4'>Admin-Name</th>
-                                            <th className='fs-6 ps-4'>Email</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody >
-                                        {
-                                            adminData.map((data, index) => {
-                                                return (
-                                                    <>
-                                                        <tr>
-                                                            <td className='ps-4'>{index + 1}</td>
-                                                            <td className='ps-4'>{data.name}</td>
-                                                            <td className='ps-4'>{data.email}</td>
-                                                        </tr>
-                                                    </>
-                                                )
-                                            })
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
->>>>>>> badbf1fcb073cda826fd863195afa5bbd19a1d28
                     </main>
                 </div>
             </div>
