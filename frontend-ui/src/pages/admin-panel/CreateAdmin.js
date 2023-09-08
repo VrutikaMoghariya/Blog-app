@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import AdminSidebar from './AdminSidebar';
-import { Link } from 'react-router-dom';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 function CreateAdmin() {
     useEffect(() => {
@@ -9,7 +8,6 @@ function CreateAdmin() {
     }, [])
     return (
         <>
-
             <div className='d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary'>
                 <AdminSidebar />
                 <div className='h-screen flex-grow-1 overflow-y-lg-auto'>
@@ -29,11 +27,9 @@ function CreateAdmin() {
                             </Form.Group>
                             <Button type="submit">Create</Button>
                         </Form>
-
                     </main>
                 </div>
             </div>
-
         </>
     )
 }
