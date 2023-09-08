@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import Header from './Header';
 import Footer from './Footer';
+import Timestamp from './Timestamp';
 import { SlCalender } from "react-icons/sl";
 import { Container, Row, Col, Carousel, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub , BiUserCircle } from "react-icons/bi";
@@ -76,7 +77,7 @@ function Home() {
         <Row>
           <Col sm={12} lg={8}>
             {
-              blogData.slice().reverse().map((item) => {
+              blogData.map((item) => {
                 return (
                   <>
                     <Col >
@@ -104,8 +105,8 @@ function Home() {
                                 {item.description}
                               </Card.Text>
                               <Card.Footer className=" p-0 text-secondary border-0 bg-white">
-                                <SlCalender className='me-1' /> 2 days ago   
-                                <h5 className='mt-3 '><BiUserCircle/> {item.user.username}</h5>
+                                <SlCalender className='me-1' /> <Timestamp createdAt={item.createdAt} />  
+                                <h5 className='mt-3 '><BiUserCircle/> {item.user.name}</h5>
                               </Card.Footer>
                             </Card.Body>
                           </Col>
@@ -138,7 +139,6 @@ function Home() {
                             <Col lg={9}>
                               <Card.Body className='ps-4'>
                                 <Card.Title title={item.description} className='blog-title mb-0' ><h5>{item.title}</h5></Card.Title>
-                                <div className=" text-secondary "><SlCalender className='me-1' /> 2 days ago</div>
                               </Card.Body>
                             </Col>
                           </Row>

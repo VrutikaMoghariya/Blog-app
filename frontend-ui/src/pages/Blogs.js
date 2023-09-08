@@ -5,6 +5,7 @@ import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
 import { SlCalender } from "react-icons/sl";
 import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
+import Timestamp from './Timestamp';
 
 function Blogs() {
 
@@ -187,7 +188,7 @@ function Blogs() {
         </Col>
 
         {
-          blogData.slice().reverse().map((item) => {
+          blogData.map((item) => {
             return (
               <>
                 <Col >
@@ -210,7 +211,7 @@ function Blogs() {
                           <Card.Text className='fs-5 text-wrap' title={item.description} style={{ textOverflow: 'ellipsis', overflow: 'hidden', WebkitLineClamp: 3, display: '-webkit-box', WebkitBoxOrient: 'vertical' }}>
                             {item.description}
                           </Card.Text>
-                          <Card.Footer className=" p-0 text-secondary border-0 bg-white"> <SlCalender className='me-1' /> 2 days ago</Card.Footer>
+                          <Card.Footer className=" p-0 text-secondary border-0 bg-white"> <SlCalender className='me-1' /> <Timestamp createdAt={item.createdAt}/> </Card.Footer>
                         </Card.Body>
                       </Col>
                       <Col>

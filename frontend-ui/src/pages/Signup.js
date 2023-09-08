@@ -25,13 +25,13 @@ function Signup() {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const post = {
+    const user = {
       name: name,
       email: email,
       password: password
     }
     try {
-      const response = await axios.post('http://localhost:3001/register', post);
+      const response = await axios.post('http://localhost:3001/register', user);
       setMsg(response.data.msg);
       setUsertoken(response.data.token);
       localStorage.setItem('User-token', response.data.token);

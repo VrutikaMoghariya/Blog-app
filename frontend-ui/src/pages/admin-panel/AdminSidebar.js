@@ -22,22 +22,22 @@ const AdminSidebar = () => {
                         <div className="collapse navbar-collapse" id="sidebarCollapse">
                             <ul className="navbar-nav">
                                 <li className="nav-item">
-                                    <Link to="/admin/dashboard" className="nav-link">
+                                    <Link to="/" className="nav-link">
                                         <i className="bi bi-house"></i> Dashboard
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/admin/dashboard" className="nav-link">
+                                    <Link to="/" className="nav-link">
                                         <i className="bi bi-book"></i> Blog-posts
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/admin/dashboard" className="nav-link">
+                                    <Link to="/" className="nav-link">
                                         <i className="bi bi-bookmarks"></i> Category-tags
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link to="/admin" className="nav-link">
+                                    <Link to="/" className="nav-link">
                                         <i className="bi bi-people"></i> Users
                                     </Link>
                                 </li>
