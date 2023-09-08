@@ -6,6 +6,7 @@ import AdminHeader from './AdminHeader';
 import Userstable from './Userstable';
 import Blogstable from './Blogstable';
 import { Button, Modal, Form } from 'react-bootstrap';
+import AdminFooter from './AdminFooter';
 
 function Admindashboard() {
 
@@ -16,11 +17,13 @@ function Admindashboard() {
     const [userData, setUserdata] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [deleteId, setDeleteId] = useState(null);
-    const [editId, setEditid] = useState("");
+    const [editId, setEditId] = useState("");
     const [isEditing, setIsEditing] = useState(false);
     const [show, setShow] = useState(false);
     const [name, setName] = useState("");
     const [colorCode, setColorcode] = useState("");
+    const [msg, setMsg] = useState("");
+
 
     useEffect(() => {
 
@@ -62,7 +65,6 @@ function Admindashboard() {
             .catch(error => console.log(error));
     }
 
-    // const isValidColorCode = (code) => /^#[0-9A-Fa-f]{6}$/.test(code);
 
     // ___________ Edit category
 
@@ -70,7 +72,7 @@ function Admindashboard() {
         handleShow();
         setName(data.name);
         setColorcode(data.colorCode);
-        setEditid(data._id);
+        setEditId(data._id);
         setIsEditing(true);
     }
 
@@ -90,25 +92,28 @@ function Admindashboard() {
         if (name && colorCode) {
 
             const data = {
-                name : name,
-                colorCode : colorCode
+                name: name,
+                colorCode: colorCode
             }
             if (editId && isEditing) {
                 try {
-                    await axios.post(`http://localhost:3001/update-category?_id=${editId}`, data );
+                    await axios.post(`http://localhost:3001/update-category?_id=${editId}`, data);
+                    handleClose();
+
                 } catch (error) {
-                    console.error("Edit Category Error:", error);
+                    setMsg(error.response.data.msg);
                 }
 
             } else {
                 try {
                     await axios.post(`http://localhost:3001/create-category`, data);
+                    handleClose();
+
                 } catch (error) {
-                    console.error("Create Category Error:", error);
+                    setMsg(error.response.data.msg);
                 }
             }
             await getAPIdata();
-            handleClose();
 
         } else {
             alert("Please fill in all required fields and provide a valid color code in the format #rrggbb");
@@ -198,6 +203,9 @@ function Admindashboard() {
                                 </div>
                             </div>
                         </div>
+
+                        {/***************  Category Table  ***********/}
+
                         <div className="container-fluid p-4 " >
                             <h3 className='m-3' ><i className="bi bi-bookmarks"></i> Category Tags
                                 <button className="ms-3 btn btn-outline-primary fs-5 p-1" onClick={handleShow}>
@@ -255,7 +263,8 @@ function Admindashboard() {
                                         )}
                                     </tbody>
 
-                                    {/* Model For Delete Confirmation */}
+                                    {/***************  Model For Delete Confirmation  ***********/}
+
                                     <Modal show={!!deleteId} onHide={cancelDelete}>
                                         <Modal.Header closeButton>
                                             <Modal.Title>Confirm Deletion</Modal.Title>
@@ -269,13 +278,13 @@ function Admindashboard() {
                                         </Modal.Footer>
                                     </Modal>
 
-                                    {/* Model For Edit and Create */}
-                                    <Modal show={show} onHide={handleClose} >
+                                    {/*************  Model For Edit and Create  ****************/}
+                                    <Modal show={show} onHide={handleClose} className='p-5' >
                                         <Modal.Header closeButton  >
                                             <h4 className='text-primary'>Category Tag</h4>
                                         </Modal.Header>
-                                        <Form className='p-3 bg-light'>
-                                            <Form.Group className="mb-3" >
+                                        <Form className='p-5 bg-light'>
+                                            <Form.Group className="mb-4" >
                                                 <Form.Label>Name</Form.Label>
                                                 <Form.Control
                                                     type="text"
@@ -285,7 +294,7 @@ function Admindashboard() {
                                                     onChange={(e) => { setName(e.target.value) }}
                                                 />
                                             </Form.Group>
-                                            <Form.Group className="mb-3" >
+                                            <Form.Group className="mb-5" >
                                                 <Form.Label>Color-Code</Form.Label>
                                                 <Form.Control
                                                     type="color"
@@ -294,8 +303,9 @@ function Admindashboard() {
                                                     onChange={(e) => { setColorcode(e.target.value) }}
                                                 />
                                             </Form.Group>
+                                            <h5>{msg}</h5>
                                         </Form>
-                                        <Modal.Footer>
+                                        <Modal.Footer className='mt-4'>
                                             <Button variant="secondary" onClick={handleClose}>
                                                 Close
                                             </Button>
@@ -310,8 +320,8 @@ function Admindashboard() {
 
                         <Userstable userData={userData} />
                         <Blogstable blogData={blogData} />
-
                     </main>
+                    <AdminFooter />
                 </div>
             </div>
 

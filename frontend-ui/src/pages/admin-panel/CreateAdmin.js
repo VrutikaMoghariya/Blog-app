@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
 import { Button, Form } from 'react-bootstrap';
-import {useNavigate } from 'react-router-dom';
 import axios from "axios";
+import AdminFooter from './AdminFooter';
 
 function CreateAdmin() {
 
-    const navigate = useNavigate();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
     const [adminData, setAdmindata] = useState([]);
 
+    const getAdminAPI = () =>{
+        axios    // get Admin from API
+        .get("http://localhost:3001/get-admin")
+        .then(data => setAdmindata(data.data.data))
+        .catch(error => console.log(error));
+    }
 
     useEffect(() => {
-        axios    // get User from API
-            .get("http://localhost:3001/get-admin")
-            .then(data => setAdmindata(data.data.data))
-            .catch(error => console.log(error));
+        getAdminAPI();
     }, [])
-
-
+    
     const createAdmin = async (e) => {
 
         if (name && email && password) {
@@ -34,7 +35,7 @@ function CreateAdmin() {
             try {
                 const response = await axios.post('http://localhost:3001/admin-register', admin);
                 setMsg(response.data.msg);
-                navigate("/admin/create-Admin");
+                getAdminAPI();
                 setName("");
                 setEmail("");
                 setPassword("");
@@ -43,7 +44,7 @@ function CreateAdmin() {
             }
         }
     }
-    
+
     return (
         <>
             <div className='d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary'>
@@ -67,7 +68,38 @@ function CreateAdmin() {
                             <Button type="submit">Create</Button>
                             <h5 className='mt-4 mb-0'>{msg}</h5>
                         </Form>
+                        <div className="container-fluid py-4 px-2 " >
+                            <h3 className='m-3'><i className="bi bi-people"></i> Admin</h3>
+                            <div className='rounded-3 p-3 bg-white w-50 shadow '>
+                                <table className="table " >
+                                    <thead className='bg-white '>
+                                        <tr>
+                                            <th className='fs-6 ps-4'>No.</th>
+                                            <th className='fs-6 ps-4'>User-Name</th>
+                                            <th className='fs-6 ps-4'>Email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody >
+                                        {
+                                            adminData.map((data, index) => {
+                                                return (
+                                                    <>
+                                                        <tr>
+                                                            <td className='ps-4'>{index + 1}</td>
+                                                            <td className='ps-4'>{data.name}</td>
+                                                            <td className='ps-4'>{data.email}</td>
+                                                        </tr>
+                                                    </>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </main>
+                    <AdminFooter/>
+
                 </div>
             </div>
         </>

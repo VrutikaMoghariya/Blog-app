@@ -1,12 +1,13 @@
-// Timestamp.js
 import React, { useEffect, useState } from 'react';
 
 const Timestamp = ({ createdAt }) => {
+
   const [timestamp, setTimestamp] = useState('');
 
   useEffect(() => {
+
     // Calculate the time difference between now and the creation date
-    const timeDiff = Date.now() - new Date(createdAt).getTime();
+    const timeDiff = Date.now() - new Date(createdAt);
 
     // Define time units in milliseconds
     const minute = 60 * 1000;
@@ -14,6 +15,7 @@ const Timestamp = ({ createdAt }) => {
     const day = 24 * hour;
 
     // Determine the appropriate timestamp format
+
     if (timeDiff < minute) {
       setTimestamp('just now');
     } else if (timeDiff < hour) {
@@ -29,6 +31,7 @@ const Timestamp = ({ createdAt }) => {
   }, [createdAt]);
 
   return <span>{timestamp}</span>;
+  
 };
 
 export default Timestamp;

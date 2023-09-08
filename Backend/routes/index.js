@@ -99,7 +99,13 @@ router.post('/create-blog', upload.single('img'), auth, blogController.createBlo
 router.get('/get-blog', blogController.getBlog);
 
 
+/******  Get ******/
+
+router.get('/search', blogController.searchBlog);
+
+
 /******  Get by User ******/
+
 router.get('/get-user-blog', auth, blogController.getuserBlog);
 
 

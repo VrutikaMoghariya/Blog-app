@@ -5,7 +5,7 @@ import Footer from './Footer';
 import Timestamp from './Timestamp';
 import { SlCalender } from "react-icons/sl";
 import { Container, Row, Col, Carousel, Card, Button, Form, InputGroup } from 'react-bootstrap';
-import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub , BiUserCircle } from "react-icons/bi";
+import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub, BiUserCircle } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
@@ -17,8 +17,10 @@ function Home() {
   //_________________ getdata from API
 
   useEffect(() => {
-          
-    const adminToken =  localStorage.getItem("Admin-token");
+
+    const adminToken = localStorage.getItem("Admin-token");
+    const userToken = localStorage.getItem("User-token");
+
     if (!adminToken) {
       navigate("/");
     }
@@ -26,10 +28,25 @@ function Home() {
       navigate("/admin/dashboard");
     }
 
-    axios     // get Blog-data from API
-      .get("http://localhost:3001/get-blog")
-      .then(data => setBlogdata(data.data.data))
-      .catch(error => console.log(error));
+    if (userToken) {
+
+      axios
+        .get("http://localhost:3001/get-user-blog", {
+          headers: {
+            'authorization': userToken,
+          },
+        })
+        .then(blog => setBlogdata(blog.data.data))
+        .catch(error => console.log(error));
+
+    } else {
+
+      axios     // get Blog-data from API
+        .get("http://localhost:3001/get-blog")
+        .then(data => setBlogdata(data.data.data))
+        .catch(error => console.log(error));
+
+    }
 
     axios    // get category from API
       .get("http://localhost:3001/get-category")
@@ -41,28 +58,38 @@ function Home() {
 
   return (
     <>
-      <Header />
+      <Header category={category} />
 
       {/********************* slider of blog ********************* */}
 
       <Container >
         <Row xs={1} md={2} >
-          <Carousel className=' py-5 mx-auto'>
+          <Carousel className='text-center p-5 w-100 bg-white rounded-3 shadow-sm'>
             {
               blogData.map((item) => {
                 return (
-                  <Carousel.Item>
-                    <Col >
-                      <Card className='bg-light'>
-                        <Card.Img variant="top" className='w-50 mx-auto bg-info' src={"http://localhost:3001/images/" + item.img} />
+                  <Carousel.Item className='px-5 bg-white'>
+                    <Row>
+                      <Col sm={1}></Col>
+                      <Col >
+                        <Card.Img variant="top" className=' w-75 rounded-2 shadow' src={"http://localhost:3001/images/" + item.img} />
+                      </Col>
+                      <Col className=' my-auto'>
                         <Card.Body >
-                          <Card.Title >{item.title}</Card.Title>
-                          <Card.Text>
+                          <Button style={{ backgroundColor: ' #EFF1F4' }} className='rounded-pill fs-6 category-btn text-capitalize border-0 text-dark px-3 py-1 mb-3'>
+                            <svg height="20" width="20">
+                              <circle cx="8" cy="8" r="4" fill={item.category.colorCode} />
+                            </svg>
+                            {item.category.name}
+                          </Button>
+                          <Card.Title className='mb-5'>{item.title}</Card.Title>
+                          <Card.Text className='mb-3 w-75 mx-auto'>
                             {item.description}
                           </Card.Text>
                         </Card.Body>
-                      </Card>
-                    </Col>
+                      </Col>
+                      <Col sm={1}> </Col>
+                    </Row>
                   </Carousel.Item>
                 )
               })
@@ -105,8 +132,8 @@ function Home() {
                                 {item.description}
                               </Card.Text>
                               <Card.Footer className=" p-0 text-secondary border-0 bg-white">
-                                <SlCalender className='me-1' /> <Timestamp createdAt={item.createdAt} />  
-                                <h5 className='mt-3 '><BiUserCircle/> {item.user.name}</h5>
+                                <SlCalender className='me-1' /> <Timestamp createdAt={item.createdAt} />
+                                <h5 className='mt-3 '><BiUserCircle /> {item.user.name}</h5>
                               </Card.Footer>
                             </Card.Body>
                           </Col>
@@ -138,7 +165,12 @@ function Home() {
                             </Col>
                             <Col lg={9}>
                               <Card.Body className='ps-4'>
-                                <Card.Title title={item.description} className='blog-title mb-0' ><h5>{item.title}</h5></Card.Title>
+                                <Card.Title title={item.description} className='blog-title mb-0' >
+                                  <h5>{item.title}</h5>
+                                </Card.Title>
+                                <Card.Footer className=" p-0 text-secondary border-0 bg-white">
+                                  <SlCalender className='me-1' /> <Timestamp createdAt={item.createdAt} />
+                                </Card.Footer>
                               </Card.Body>
                             </Col>
                           </Row>
@@ -154,7 +186,7 @@ function Home() {
                   category.map((item) => {
                     return (
                       <>
-                        <Button style={{ backgroundColor: ' #EFF1F4', fontSize: 'small' }} className='rounded-pill  category-btn text-capitalize border-0 text-dark px-2 py-1  m-2 '>
+                        <Button style={{ backgroundColor: '#EFF1F4', fontSize: 'small' }} className='rounded-pill  category-btn text-capitalize border-0 text-dark px-2 py-1  m-2 '>
                           <svg height="20" width="20">
                             <circle cx="8" cy="8" r="4" fill={item.colorCode} />
                           </svg>
@@ -176,12 +208,8 @@ function Home() {
                           type="text"
                           className='rounded-pill px-3 py-2 m-1'
                           placeholder="Your name"
-                          aria-describedby="inputGroupPrepend"
                           required
                         />
-                        <Form.Control.Feedback type="invalid" className='text-white'>
-                          Please enter your name.
-                        </Form.Control.Feedback>
                       </InputGroup>
                     </Form.Group>
                   </Row>
@@ -192,12 +220,8 @@ function Home() {
                           type="email"
                           className='rounded-pill px-3 py-2 m-1'
                           placeholder="Your email address"
-                          aria-describedby="inputGroupPrepend"
                           required
                         />
-                        <Form.Control.Feedback type="invalid" className='text-white'>
-                          Please enter email address.
-                        </Form.Control.Feedback>
                       </InputGroup>
                     </Form.Group>
                   </Row>

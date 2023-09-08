@@ -12,14 +12,11 @@ exports.createAdmin = async function (req, res, next) {
 
         const createAdmin = await ADMIN.create(req.body);
 
-        const token = jwt.sign({adminId: createAdmin._id}, "RANDOM-TOKEN");
-
         // return success if the new Admin is added to the database successfully
         res.status(201).json({
             status: "Success",
             msg: "Admin Create Successfully",
             data: createAdmin,
-            token: token
         })
     } catch (error) {
         res.status(400).json({

@@ -20,9 +20,9 @@ function Signup() {
     else {
       navigate("/signup");
     }
-  }, [navigate , userToken])
+  }, [navigate, userToken])
 
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const user = {

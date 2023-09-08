@@ -44,12 +44,50 @@ exports.getBlog = async function (req, res, next) {
     }
 }
 
+
+
+exports.searchBlog = async function (req, res, next) {
+    try {
+        const searchTerm = req.query.q;
+
+        const searchResults = await BLOG.find({
+            $and: [
+                {
+                    $or: [
+                        { title: { $regex: new RegExp(searchTerm, 'i') } },
+                        { description: { $regex: new RegExp(searchTerm, 'i') } },
+                    ]
+                },
+                {
+                    'category.name': searchTerm
+                },
+                {
+                    'user.name': searchTerm
+                }
+            ]
+        }).populate('category').populate('user').sort({ createdAt: -1 });
+
+        res.status(200).json({
+            status: "Success",
+            msg: "Blog search successful",
+            data: searchResults
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: "Fail",
+            msg: "Blog search failed",
+            data: error
+        });
+    }
+};
+
+
 // Get-Blog by User
 
 exports.getuserBlog = async function (req, res, next) {
 
     try {
-        const getBlog = await BLOG.find({ user: req.userId }).populate('category').populate('user');
+        const getBlog = await BLOG.find({ user: req.userId }).populate('category').populate('user').sort({ createdAt: -1 });
         res.status(200).json({
             status: "Success",
             msg: "User-Blog get Successfully",
@@ -76,7 +114,7 @@ exports.updateBlog = async function (req, res, next) {
         } else {
             req.body.img = req.body.img;
         }
-        
+
         await BLOG.findByIdAndUpdate(req.query._id, req.body);
         res.status(200).json({
             status: "Success",

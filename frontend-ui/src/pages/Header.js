@@ -1,8 +1,8 @@
-import React , {useState , useEffect} from 'react';
-import {Nav, Navbar, Container, Row } from 'react-bootstrap';
-import {Button, Modal, Form } from 'react-bootstrap';
-import {FiMoon, FiSearch } from "react-icons/fi";
-import {Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Nav, Navbar, Container, Row, NavDropdown } from 'react-bootstrap';
+import { Button, Modal, Form } from 'react-bootstrap';
+import { FiMoon, FiSearch } from "react-icons/fi";
+import { Link, useNavigate } from 'react-router-dom';
 
 function Header() {
 
@@ -43,7 +43,7 @@ function Header() {
               </Nav>
               <Button className='btn nav-icon text-dark border-0 bg-white mx-1 fs-5' onClick={handleShow}><FiSearch /></Button>
               <Button className='btn nav-icon text-dark border-0 bg-white mx-1 fs-5'><FiMoon /></Button>
-              {storageToken ? <Button onClick={clickonLogout} className='signin btn  px-4 mx-3 rounded-pill'>Logout</Button> 
+              {storageToken ? <Button onClick={clickonLogout} className='signin btn  px-4 mx-3 rounded-pill'>Logout</Button>
                 : <Button as={Link} to="/login" className='signin btn  px-4 mx-3 rounded-pill'> Login </Button>}
             </Navbar.Collapse>
             <Modal show={show} onHide={handleClose} className='p-0 mt-5 '>

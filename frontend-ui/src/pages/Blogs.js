@@ -16,7 +16,7 @@ function Blogs() {
   const [category, setCategory] = useState([]);
   const [description, setDescription] = useState("");
   const [img, setImg] = useState("");
-  const [editId, setEditid] = useState("");
+  const [editId, setEditId] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [show, setShow] = useState(false);
@@ -32,7 +32,7 @@ function Blogs() {
     setDescription("");
     setImg("");
     setTitle("");
-    setEditid("");
+    setEditId("");
     setShow(true);
     setIsEditing(false);
   }
@@ -144,7 +144,7 @@ function Blogs() {
     setDescription(data.description);
     setImg(data.img);
     setTitle(data.title);
-    setEditid(data._id);
+    setEditId(data._id);
     setIsEditing(true);
   }
 
@@ -211,7 +211,9 @@ function Blogs() {
                           <Card.Text className='fs-5 text-wrap' title={item.description} style={{ textOverflow: 'ellipsis', overflow: 'hidden', WebkitLineClamp: 3, display: '-webkit-box', WebkitBoxOrient: 'vertical' }}>
                             {item.description}
                           </Card.Text>
-                          <Card.Footer className=" p-0 text-secondary border-0 bg-white"> <SlCalender className='me-1' /> <Timestamp createdAt={item.createdAt}/> </Card.Footer>
+                          <Card.Footer className=" p-0 text-secondary border-0 bg-white">
+                            <SlCalender className='me-1' /> <Timestamp createdAt={item.createdAt} />
+                          </Card.Footer>
                         </Card.Body>
                       </Col>
                       <Col>
@@ -229,7 +231,7 @@ function Blogs() {
 
       <Footer />
 
-      {/***************** model Form Delete Blog **************/}
+      {/***************** model Form Delete Confirmation **************/}
 
       <Modal show={!!deleteId} onHide={cancelDelete}>
         <Modal.Header closeButton>
