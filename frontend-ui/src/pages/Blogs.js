@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
 import { SlCalender } from "react-icons/sl";
 import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
-import Timestamp from './Timestamp';
+import Timestamp from '../components/Timestamp';
+import { createBlog, getUserBlog, updateBlog } from '../apis/blog';
+import { getAllBCategory } from '../apis/category';
 
 function Blogs() {
 
@@ -20,6 +22,23 @@ function Blogs() {
   const [isEditing, setIsEditing] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [show, setShow] = useState(false);
+
+
+  const getBlogdata = async () => {
+    const data = await getUserBlog();
+    setBlogdata(data);
+  };
+
+  const getCategoryData = async () => {
+    const data = await getAllBCategory();
+    setCategorydata(data);
+  }
+
+  useEffect(() => {
+    getCategoryData();
+  }, []);
+
+
 
   //_______________ Handle Model
 
@@ -45,36 +64,10 @@ function Blogs() {
     if (!userToken) {
       navigate('/login');
     } else {
-      getAPIdata();
+      getBlogdata();
     }
   }, [navigate]);
 
-
-  //________________ Get API Data
-
-  useEffect(() => {
-    axios           // Get Category 
-      .get("http://localhost:3001/get-category")
-      .then(category => setCategorydata(category.data.data))
-      .catch(error => console.log(error));
-  }, []);
-
-
-  //________________ Get Blog API Data
-
-  const getAPIdata = () => {
-
-    const userToken = localStorage.getItem("User-token");
-
-    axios
-      .get("http://localhost:3001/get-user-blog", {
-        headers: {
-          'authorization': userToken,
-        },
-      })
-      .then(blog => setBlogdata(blog.data.data))
-      .catch(error => console.log(error));
-  };
 
 
   //_______________ Create Blog
@@ -82,8 +75,6 @@ function Blogs() {
   const addBlog = async () => {
 
     if (title && description && category && img) {
-
-      const userToken = localStorage.getItem("User-token");
 
       const formData = new FormData();
 
@@ -102,31 +93,15 @@ function Blogs() {
 
       if (isEditing && editId) {
 
-        try {
-          await axios.post(`http://localhost:3001/update-blog?_id=${editId}`, formData, {
-            headers: {
-              "authorization": userToken,
-            }
-          });
-        } catch (error) {
-          console.error("Edit blog Error:", error);
-        }
+       await  updateBlog(editId, formData);
 
       }
       else {
 
-        try {
-          await axios.post("http://localhost:3001/create-blog", formData, {
-            headers: {
-              'authorization': userToken,
-            }
-          })
-        } catch (error) {
-          console.error("Create blog Error:", error);
-        }
+       await createBlog(formData);
 
       }
-      await getAPIdata();
+      await getBlogdata();
       handleClose();
 
     } else {
@@ -169,7 +144,7 @@ function Blogs() {
         }
       });
       setDeleteId(null);
-      await getAPIdata();
+      await getBlogdata();
     }
   };
 
@@ -183,10 +158,7 @@ function Blogs() {
           <Button className='d-flex fs-4 bg-light text-dark  mx-auto' onClick={handleShow}>Create Your Own Blog</Button>
         </Col>
         <Col>
-
-
         </Col>
-
         {
           blogData.map((item) => {
             return (

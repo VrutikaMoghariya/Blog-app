@@ -45,7 +45,7 @@ function Admindashboard() {
         getAPIdata();   // get category from API
 
         axios    // get User from API
-            .get("http://localhost:3001/get-user")
+            .get("http://localhost:3001/user/get-user")
             .then(data => setUserdata(data.data.data))
             .catch(error => console.log(error));
 

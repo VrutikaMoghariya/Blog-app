@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from './Header';
+import Header from '../components/Header';
 
 function Signup() {
 
@@ -31,7 +31,7 @@ function Signup() {
       password: password
     }
     try {
-      const response = await axios.post('http://localhost:3001/register', user);
+      const response = await axios.post('http://localhost:3001/user/register', user);
       setMsg(response.data.msg);
       setUsertoken(response.data.token);
       localStorage.setItem('User-token', response.data.token);

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import axios from "axios";
-import Header from './Header';
-import Footer from './Footer';
-import Timestamp from './Timestamp';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Timestamp from '../components/Timestamp';
 import { SlCalender } from "react-icons/sl";
 import { Container, Row, Col, Carousel, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub, BiUserCircle } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
+import { getUserBlog, getAllBlogs } from '../apis/blog';
+import { getAllBCategory } from '../apis/category';
 
 function Home() {
 
@@ -14,7 +15,24 @@ function Home() {
   const [blogData, setBlogdata] = useState([]);
   const [category, setCategory] = useState([]);
 
-  //_________________ getdata from API
+  //_________________ get-data from API
+
+  const getUserData = async () => {
+
+    const data = await getUserBlog();
+    setBlogdata(data);
+  }
+
+  const getAllData = async () => {
+
+    const data = await getAllBlogs();
+    setBlogdata(data);
+  }
+
+  const getCategoryData = async () => {
+    const data = await getAllBCategory();
+    setCategory(data);
+  }
 
   useEffect(() => {
 
@@ -29,29 +47,12 @@ function Home() {
     }
 
     if (userToken) {
-
-      axios
-        .get("http://localhost:3001/get-user-blog", {
-          headers: {
-            'authorization': userToken,
-          },
-        })
-        .then(blog => setBlogdata(blog.data.data))
-        .catch(error => console.log(error));
-
+      getUserData();
     } else {
-
-      axios     // get Blog-data from API
-        .get("http://localhost:3001/get-blog")
-        .then(data => setBlogdata(data.data.data))
-        .catch(error => console.log(error));
-
+      getAllData();
     }
 
-    axios    // get category from API
-      .get("http://localhost:3001/get-category")
-      .then(data => setCategory(data.data.data))
-      .catch(error => console.log(error));
+    getCategoryData();
 
   }, [navigate]);
 

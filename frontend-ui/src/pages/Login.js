@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Header from './Header';
+import Header from '../components/Header';
 import axios from "axios";
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -43,7 +43,7 @@ function Login() {
 
       if (isAdmin) {
         
-        const response = await axios.post('http://localhost:3001/admin-login', data);
+        const response = await axios.post('http://localhost:3001/admin/admin-login', data);
 
         navigate('/admin/dashboard');
 
@@ -56,7 +56,7 @@ function Login() {
 
 
       } else {
-        const response = await axios.post('http://localhost:3001/login', data);
+        const response = await axios.post('http://localhost:3001/user/login', data);
         localStorage.setItem('User-token', response.data.token);
         navigate('/blogs');
       }
