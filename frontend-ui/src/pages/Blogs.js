@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from "axios";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
 import { SlCalender } from "react-icons/sl";
 import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import Timestamp from '../components/Timestamp';
-import { createBlog, getUserBlog, updateBlog } from '../apis/blog';
+import { createBlog, getUserBlog, updateBlog, deleteBlog } from '../apis/blog';
 import { getAllBCategory } from '../apis/category';
 
 function Blogs() {
@@ -78,8 +77,6 @@ function Blogs() {
 
       const formData = new FormData();
 
-      console.log(typeof img);
-
       if (typeof img == "string") {
         formData.append("img", img);
       }
@@ -92,14 +89,10 @@ function Blogs() {
       formData.append("category", category);
 
       if (isEditing && editId) {
-
-       await  updateBlog(editId, formData);
-
+        await updateBlog(editId, formData);
       }
       else {
-
-       await createBlog(formData);
-
+        await createBlog(formData);
       }
       await getBlogdata();
       handleClose();
@@ -133,16 +126,10 @@ function Blogs() {
     setDeleteId(null);
   };
 
-  const deleteBlog = async () => {
-
-    const userToken = localStorage.getItem("User-token");
+  const removeBlog = async () => {
 
     if (deleteId) {
-      await axios.delete(`http://localhost:3001/delete-blog?_id=${deleteId}`, {
-        headers: {
-          'authorization': userToken,
-        }
-      });
+      await deleteBlog(deleteId);
       setDeleteId(null);
       await getBlogdata();
     }
@@ -214,7 +201,7 @@ function Blogs() {
           <Button variant='secondary' onClick={cancelDelete}>
             Cancel
           </Button>
-          <Button variant='danger' onClick={deleteBlog}>Delete</Button>
+          <Button variant='danger' onClick={removeBlog}>Delete</Button>
         </Modal.Footer>
       </Modal>
 

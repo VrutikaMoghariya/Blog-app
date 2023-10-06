@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
 import { Button, Form } from 'react-bootstrap';
-import axios from "axios";
 import AdminFooter from './AdminFooter';
+import { adminSignUp, getAllAdmin } from '../../apis/admin';
 
 function CreateAdmin() {
 
@@ -12,16 +12,15 @@ function CreateAdmin() {
     const [msg, setMsg] = useState("");
     const [adminData, setAdmindata] = useState([]);
 
-    const getAdminAPI = () =>{
-        axios    // get Admin from API
-        .get("http://localhost:3001/get-admin")
-        .then(data => setAdmindata(data.data.data))
-        .catch(error => console.log(error));
+    const getAdminAPI = async () =>{
+        const response = await getAllAdmin();
+        setAdmindata(response);
     }
 
     useEffect(() => {
         getAdminAPI();
-    }, [])
+    }, []);
+
     
     const createAdmin = async (e) => {
 
@@ -33,7 +32,7 @@ function CreateAdmin() {
                 password: password
             }
             try {
-                const response = await axios.post('http://localhost:3001/admin-register', admin);
+                const response = await adminSignUp(admin);
                 setMsg(response.data.msg);
                 getAdminAPI();
                 setName("");

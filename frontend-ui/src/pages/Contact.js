@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router-dom';
 function Contact() {
 
   const navigate = useNavigate();
+
   useEffect(() => {
-
     const adminToken = localStorage.getItem("Admin-token");
-
     if (!adminToken) {
       navigate("/contact");
     }
@@ -16,13 +15,12 @@ function Contact() {
       navigate("/admin/dashboard");
     }
 
-  }, [navigate])
+  }, [navigate]);
 
 
   return (
     <>
       <Header />
-
       <section className="contact_us">
         <div className="container">
           <div className="row">
@@ -88,8 +86,6 @@ function Contact() {
           </div>
         </div>
       </section>
-
-
     </>
   )
 }

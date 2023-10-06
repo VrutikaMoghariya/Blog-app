@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import axios from "axios";
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import { userLogIn } from '../apis/user';
+import { adminLogIn } from '../apis/admin';
 
 function Login() {
 
@@ -11,17 +12,16 @@ function Login() {
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
 
-  
   useEffect(() => {
 
     const userToken = localStorage.getItem("User-token");
     const AdminToken = localStorage.getItem("Admin-token");
-    
+
     if (userToken) {
       navigate('/blogs');
-    }else if (AdminToken) {
+    } else if (AdminToken) {
       navigate('/admin/dashboard');
-    }else{
+    } else {
       navigate('/login');
     }
   }, [navigate]);
@@ -42,11 +42,9 @@ function Login() {
       }
 
       if (isAdmin) {
-        
-        const response = await axios.post('http://localhost:3001/admin/admin-login', data);
 
+        const response = await adminLogIn(data);
         navigate('/admin/dashboard');
-
         const adminData = {
           name: response.data.data.name,
           email: response.data.data.email
@@ -54,17 +52,14 @@ function Login() {
         localStorage.setItem('Admin-token', response.data.token);
         localStorage.setItem('Admin-data', JSON.stringify(adminData));
 
-
       } else {
-        const response = await axios.post('http://localhost:3001/user/login', data);
-        localStorage.setItem('User-token', response.data.token);
-        navigate('/blogs');
+       
+          await userLogIn(data);
+          navigate('/blogs');
       }
-
-    } catch (e) {
-      setMsg(e.response.data.msg);
+    } catch (error) {
+      setMsg(error.response.data.msg);
     }
-
   };
 
   return (
@@ -87,7 +82,7 @@ function Login() {
               <Button type="submit" className='bg-danger m-2' onClick={() => { loginForm(true) }} >Admin Login</Button>
               <br></br>
               Don't have an account yet? <Link to="/signup">Sign Up</Link>
-              <h4 className='mx-auto text-danger mt-5'> {msg} </h4>
+              <h4 className='mx-auto text-danger mt-5'>{msg} </h4>
             </div>
           </Col>
           <Col></Col>
