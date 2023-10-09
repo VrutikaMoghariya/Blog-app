@@ -18,6 +18,10 @@ router.post('/register', userController.createUser);
 router.post('/login', userController.loginUser);
 
 
+/****** User Login with gmail ******/
+
+router.get('/auth/google' , userController.loginWithGmail);
+
 /******  Get  ******/
 
 router.get('/get-user', userController.getUser);

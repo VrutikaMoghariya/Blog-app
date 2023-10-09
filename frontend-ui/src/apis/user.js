@@ -27,8 +27,14 @@ const getAllUser = async () => {
     }
 }
 
+const authGoggle = async () =>{
+    const res = await axios.get(`${url}/auth/google`);
+    return res;
+}
+
 export {
     userLogIn,
     userSignUp,
-    getAllUser
+    getAllUser,
+    authGoggle
 }

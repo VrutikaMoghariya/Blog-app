@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { userLogIn } from '../apis/user';
+import { FcGoogle } from "react-icons/fc";
+import { authGoggle, userLogIn } from '../apis/user';
 import { adminLogIn } from '../apis/admin';
+
 
 function Login() {
 
@@ -27,22 +29,17 @@ function Login() {
   }, [navigate]);
 
 
-
   const loginForm = async (isAdmin) => {
-
     try {
 
       if (!email || !password) {
         return alert("Please Enter valid Fields");
       }
-
       const data = {
         email: email,
         password: password
       }
-
       if (isAdmin) {
-
         const response = await adminLogIn(data);
         navigate('/admin/dashboard');
         const adminData = {
@@ -53,14 +50,27 @@ function Login() {
         localStorage.setItem('Admin-data', JSON.stringify(adminData));
 
       } else {
-       
-          await userLogIn(data);
-          navigate('/blogs');
+
+        await userLogIn(data);
+        navigate('/blogs');
       }
     } catch (error) {
       setMsg(error.response.data.msg);
     }
   };
+
+  const logInWithGmail = async () =>{
+    try {
+      const res = await authGoggle();
+      console.log(res);
+      navigate('/blogs');
+
+    } catch (error) {
+      console.log(error);
+      navigate('/login');
+
+    }
+  }
 
   return (
     <>
@@ -69,7 +79,7 @@ function Login() {
         <Row>
           <Col></Col>
           <Col>
-            <div className='bg-light border p-5'>
+            <div className='bg-light border px-5 py-3'>
               <Form.Group className="mb-3" >
                 <Form.Label>Email address</Form.Label>
                 <Form.Control type="email" name='email' required placeholder="Enter email" onChange={(e) => { setEmail(e.target.value) }} />
@@ -78,11 +88,20 @@ function Login() {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" name='password' required placeholder="Password" onChange={(e) => { setPassword(e.target.value) }} />
               </Form.Group>
-              <Button type="submit" className='bg-theme-pink' onClick={() => { loginForm(false) }}>Log In</Button>
-              <Button type="submit" className='bg-danger m-2' onClick={() => { loginForm(true) }} >Admin Login</Button>
-              <br></br>
-              Don't have an account yet? <Link to="/signup">Sign Up</Link>
-              <h4 className='mx-auto text-danger mt-5'>{msg} </h4>
+              <div style={{ height: '30px' }} className='text-center fs-5 text-danger my-2'>{msg} </div>
+
+              <div className='text-center w-100'>
+                <Button type="submit" className='rounded-0 border m-2  bg-theme-pink' onClick={() => { loginForm(false) }}>
+                  Log In
+                </Button>
+                <Button type="submit" className='rounded-0 border m-2  bg-success m-2' onClick={() => { loginForm(true) }} >
+                  Admin Login
+                </Button>
+                <Button onClick={logInWithGmail} className='bg-white my-4  text-dark rounded-0 border-secondary'>
+                  <FcGoogle className='me-2 fs-5' />Login With Gmail
+                </Button><br></br>
+                Don't have an account yet? <Link to="/signup">Sign Up</Link>
+              </div>
             </div>
           </Col>
           <Col></Col>
