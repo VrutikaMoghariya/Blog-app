@@ -6,7 +6,7 @@ import { SlCalender } from "react-icons/sl";
 import { Container, Row, Col, Carousel, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { BiLogoTwitter, BiLogoFacebook, BiLogoLinkedin, BiLogoInstagram, BiLogoGithub, BiUserCircle } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
-import { getUserBlog, getAllBlogs } from '../apis/blog';
+import { getAllBlogs } from '../apis/blog';
 import { getAllBCategory } from '../apis/category';
 
 function Home() {
@@ -17,14 +17,7 @@ function Home() {
 
   //_________________ get-data from API
 
-  const getUserData = async () => {
-
-    const data = await getUserBlog();
-    setBlogdata(data);
-  }
-
   const getAllData = async () => {
-
     const data = await getAllBlogs();
     setBlogdata(data);
   }
@@ -37,7 +30,6 @@ function Home() {
   useEffect(() => {
 
     const adminToken = localStorage.getItem("Admin-token");
-    const userToken = localStorage.getItem("User-token");
 
     if (!adminToken) {
       navigate("/");
@@ -46,12 +38,7 @@ function Home() {
       navigate("/admin/dashboard");
     }
 
-    if (userToken) {
-      getUserData();
-    } else {
-      getAllData();
-    }
-
+    getAllData();
     getCategoryData();
 
   }, [navigate]);

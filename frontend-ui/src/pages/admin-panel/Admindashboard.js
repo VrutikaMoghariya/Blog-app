@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import Userstable from './Userstable';
 import Blogstable from './Blogstable';
 import { Button, Modal, Form } from 'react-bootstrap';
 import AdminFooter from './AdminFooter';
+import { getAllBlogs } from '../../apis/blog';
+import { getAllUser } from '../../apis/user';
+import { createCategory, deleteCategory, getAllBCategory, updateCategory } from '../../apis/category';
 
 function Admindashboard() {
 
@@ -24,6 +26,23 @@ function Admindashboard() {
     const [colorCode, setColorcode] = useState("");
     const [msg, setMsg] = useState("");
 
+    const getBlogdata = async () => {
+        const data = await getAllBlogs();
+        setBlogdata(data);
+    };
+
+    const getCategoryData = async () => {
+        const data = await getAllBCategory();
+        setCategorydata(data);
+        setIsLoading(false);
+    }
+
+    const getUserData = async () => {
+        const res = await getAllUser();
+        console.log(res);
+        setUserdata(res);
+    }
+
 
     useEffect(() => {
 
@@ -37,33 +56,11 @@ function Admindashboard() {
             navigate("/login");
         }
 
-        axios     // get Blog-data from API
-            .get("http://localhost:3001/get-blog")
-            .then(data => setBlogdata(data.data.data))
-            .catch(error => console.log(error));
-
-        getAPIdata();   // get category from API
-
-        axios    // get User from API
-            .get("http://localhost:3001/user/get-user")
-            .then(data => setUserdata(data.data.data))
-            .catch(error => console.log(error));
+        getBlogdata();
+        getCategoryData();
+        getUserData();
 
     }, [navigate]);
-
-
-    // _______________Get Category API Data
-
-    const getAPIdata = () => {
-
-        axios
-            .get("http://localhost:3001/get-category")
-            .then(data => {
-                setCategorydata(data.data.data);
-                setIsLoading(false);
-            })
-            .catch(error => console.log(error));
-    }
 
 
     // ___________ Edit category
@@ -97,7 +94,7 @@ function Admindashboard() {
             }
             if (editId && isEditing) {
                 try {
-                    await axios.post(`http://localhost:3001/update-category?_id=${editId}`, data);
+                    await updateCategory(editId, data);
                     handleClose();
 
                 } catch (error) {
@@ -106,19 +103,17 @@ function Admindashboard() {
 
             } else {
                 try {
-                    await axios.post(`http://localhost:3001/create-category`, data);
+                    await createCategory(data);
                     handleClose();
-
                 } catch (error) {
-                    setMsg(error.response.data.msg);
+                    setMsg(error.response.msg);
                 }
             }
-            await getAPIdata();
+            await getCategoryData();
 
         } else {
             alert("Please fill in all required fields and provide a valid color code in the format #rrggbb");
         }
-
     }
 
 
@@ -132,11 +127,11 @@ function Admindashboard() {
         setDeleteId(null);
     };
 
-    const deleteCategory = async () => {
+    const deleteData = async () => {
         if (deleteId) {
-            await axios.delete(`http://localhost:3001/delete-category?_id=${deleteId}`);
+            await deleteCategory(deleteId);
             setDeleteId(null);
-            await getAPIdata();
+            await getCategoryData();
         }
     }
 
@@ -274,7 +269,7 @@ function Admindashboard() {
                                             <Button variant='secondary' onClick={cancelDelete}>
                                                 Cancel
                                             </Button>
-                                            <Button variant='danger' onClick={deleteCategory}>Delete</Button>
+                                            <Button variant='danger' onClick={deleteData}>Delete</Button>
                                         </Modal.Footer>
                                     </Modal>
 
