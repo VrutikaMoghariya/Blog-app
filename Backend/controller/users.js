@@ -62,51 +62,6 @@ exports.loginUser = async function (req, res, next) {
     }
 }
 
-
-exports.loginWithGmail = async function (req, res, next) {
-    try {
-        passport.use(new GoogleStrategy({
-            clientID: '807127153-ulrsjnqco1f5ja0qt1u6cqo4gmhr361e.apps.googleusercontent.com',
-            clientSecret: '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',
-            callbackURL: 'http://localhost:3000/auth/google/callback',
-        }, async (accessToken, refreshToken, profile, done) => {
-            // Check if the user already exists in the database
-            let user = await USER.findOne({ email: profile.id });
-            console.log(user);
-
-            if (!user) {
-                // If the user doesn't exist, create a new user in the database
-                user = new USER({
-                    email: profile.id,
-                    name: profile.displayName,
-                });
-                await user.save();
-
-            }
-
-
-            return done(null, user);
-        }));
-
-        passport.serializeUser((user, done) => {
-            done(null, user.id);
-        });
-
-        passport.deserializeUser(async (id, done) => {
-            const user = await USER.findById(id);
-            done(null, user);
-        });
-
-
-    } catch (error) {
-        res.status(400).json({
-            status: "Fail",
-            msg: "Fail Log in with Gmail",
-            data: error
-        })
-    }
-}
-
 // Get - User
 
 exports.getUser = async function (req, res, next) {

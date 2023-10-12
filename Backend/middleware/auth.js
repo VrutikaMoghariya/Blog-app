@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 module.exports = async (req, res, next) => {
   try {
     
+    console.log(req.headers.authorization);
     //   get the token from the authorization header
     const token = await req.headers.authorization ;
 
