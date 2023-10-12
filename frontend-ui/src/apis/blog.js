@@ -17,15 +17,15 @@ const getAllBlogs = async () => {
 const getUserBlog = async () => {
 
   try {
-    console.log("userBlog :: " + userToken);
+    const userToken = localStorage.getItem("User-token");
     const res = await axios.get(`${url}/get-user-blog`, {
       headers: {
         'authorization': userToken,
       },
     });
 
-    console.log(res);
     return res.data.data;
+
   } catch (error) {
     return error;
   }

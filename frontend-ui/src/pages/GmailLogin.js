@@ -7,7 +7,7 @@ function GmailLogin() {
   const token = new URLSearchParams(search).get("token");
 
   useEffect(() => {
-    console.log(token);
+    // console.log("token == " + token);
 
     if (token) {
       try {

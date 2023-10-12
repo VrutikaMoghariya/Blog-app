@@ -29,7 +29,7 @@ module.exports = function (passport) {
                 await user.save();
             }
 
-            const token = jwt.sign({ userId: user._id }, 'Just-for-re-varify');
+            const token = jwt.sign({ userId: user._id }, "RANDOM-TOKEN");
             return done(null, user, token);
 
         } catch (err) {

@@ -3,10 +3,8 @@ const jwt = require("jsonwebtoken");
 module.exports = async (req, res, next) => {
   try {
     
-    console.log(req.headers.authorization);
     //   get the token from the authorization header
     const token = await req.headers.authorization ;
-
     //check if the token matches the supposed origin
     const decodedToken = await jwt.verify(token, "RANDOM-TOKEN");
 

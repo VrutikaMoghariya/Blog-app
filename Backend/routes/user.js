@@ -3,8 +3,6 @@ var router = express.Router();
 var passport = require('passport');
 var auth = require('../middleware/auth');
 var userController = require('../controller/users');
-const USER = require('../model/users');
-const jwt = require('jsonwebtoken');
 
 
 /*_______________________________  User Authentication ___________________________________ */
@@ -44,9 +42,7 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 
 router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
-        // Generate a JWT token and redirect to your frontend with the token
-        const token = jwt.sign({ userId: req.user._id }, 'Just-for-re-varify');
-        res.redirect(`http://localhost:3000/gmail/login?token=${token}`);
+        res.redirect(`http://localhost:3000/gmail/login?token=${req.authInfo}`);
     });
 
 router.get('/auth/google/revarify', auth , async (req, res, next) => {
