@@ -28,7 +28,7 @@ function Blogstable({blogData}) {
                                                 <td className='ps-4'>{data.description}</td> 
                                                 <td className='ps-4'>{data.category.name}</td>
                                                 <td className='ps-4'>{data.user.name}</td>
-                                                <td><img src={"http://localhost:3001/images/"+data.img} className='w-25' alt={data.title}/></td>
+                                                <td><img src={"https://blog-app-iicz.onrender.com/images/"+data.img} className='w-25' alt={data.title}/></td>
                                             </tr>
                                         </>
                                     )

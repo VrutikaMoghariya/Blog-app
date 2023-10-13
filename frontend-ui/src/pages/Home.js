@@ -60,7 +60,7 @@ function Home() {
                     <Row>
                       <Col sm={1}></Col>
                       <Col >
-                        <Card.Img variant="top" className=' w-75 rounded-2 shadow' src={"http://localhost:3001/images/" + item.img} />
+                        <Card.Img variant="top" className=' w-75 rounded-2 shadow' src={"https://blog-app-iicz.onrender.com/images/" + item.img} />
                       </Col>
                       <Col className=' my-auto'>
                         <Card.Body >
@@ -100,7 +100,7 @@ function Home() {
                         <Row>
                           <Col lg={4} md={11}>
                             <div className='overflow-hidden rounded-4 shadow bg-body m-2' style={{ width: '250px', height: '250px' }}>
-                              <Card.Img variant="top" src={"http://localhost:3001/images/" + item.img} className='blog-img  w-100 h-100   ' />
+                              <Card.Img variant="top" src={"https://blog-app-iicz.onrender.com/images/" + item.img} className='blog-img  w-100 h-100   ' />
                             </div>
                           </Col>
                           <Col lg={8} md={11}>
@@ -148,7 +148,7 @@ function Home() {
                           <Row>
                             <Col lg={3}>
                               <div className='overflow-hidden rounded-3 shadow  bg-body m-1' style={{ width: '90px', height: '90px' }}>
-                                <Card.Img variant="top" src={"http://localhost:3001/images/" + item.img} className='blog-img  w-100 h-100 ' />
+                                <Card.Img variant="top" src={"https://blog-app-iicz.onrender.com/images/" + item.img} className='blog-img  w-100 h-100 ' />
                               </div>
                             </Col>
                             <Col lg={9}>

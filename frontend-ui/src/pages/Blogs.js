@@ -155,7 +155,7 @@ function Blogs() {
                     <Row>
                       <Col lg={4} md={12}>
                         <div className='overflow-hidden rounded-4 shadow bg-body m-2' style={{ width: '250px', height: '250px' }}>
-                          <Card.Img variant="top" src={"http://localhost:3001/images/" + item.img} className='blog-img  w-100 h-100   ' />
+                          <Card.Img variant="top" src={"https://blog-app-iicz.onrender.com/images/" + item.img} className='blog-img  w-100 h-100   ' />
                         </div>
                       </Col>
                       <Col lg={6} md={12}>

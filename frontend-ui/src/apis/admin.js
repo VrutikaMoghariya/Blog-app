@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:3001/admin";
+const url = "https://blog-app-iicz.onrender.com/admin";
 
 const adminLogIn = async (data) => {
     const res = await axios.post(`${url}/admin-login`, data);

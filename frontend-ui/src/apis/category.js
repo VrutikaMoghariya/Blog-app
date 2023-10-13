@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:3001/category";
+const url = "https://blog-app-iicz.onrender.com/category";
 
 const getAllBCategory = async () => {
 

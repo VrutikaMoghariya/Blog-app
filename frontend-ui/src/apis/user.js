@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:3001/user";
+const url = "https://blog-app-iicz.onrender.com/user";
 
 const userLogIn = async (data) => {
 

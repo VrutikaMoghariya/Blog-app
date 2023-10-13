@@ -85,7 +85,7 @@ function Login() {
                 <Button type="submit" className='rounded-0 border m-2  bg-success m-2' onClick={() => { loginForm(true) }} >
                   Admin Login
                 </Button>
-                <Button as={Link} to='http://localhost:3001/user/auth/google' className='bg-white my-4  text-dark rounded-0 border-secondary'>
+                <Button as={Link} to='https://blog-app-iicz.onrender.com/user/auth/google' className='bg-white my-4  text-dark rounded-0 border-secondary'>
                   <FcGoogle className='me-2 fs-5' />Login With Gmail
                 </Button><br></br>
                 Don't have an account yet? <Link to="/signup">Sign Up</Link>
